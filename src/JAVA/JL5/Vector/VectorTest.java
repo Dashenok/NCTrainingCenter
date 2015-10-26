@@ -506,7 +506,7 @@ public class VectorTest {
 
     public class VectorImpl extends LinkedVector {
 
-        public VectorImpl(int size) {
+                public VectorImpl(int size) {
             super();
             for (int i=0;i<size;i++) {
                 super.addElement(0.0);
@@ -522,14 +522,16 @@ public class VectorTest {
         }
 
         public void setData(double[] data) {
-            for (int i=0; i<size;i++) {
+            head = null;
+            super.size = 0;
+            for (int i=0; i<data.length;i++) {
                 if (i == 0) {
                     head = new Nod(data[0]);
                     head.prev = head;
                     head.next = head;
-                    size++;
+                    super.size = 1;
                 } else {
-                    insertElementBefore(new Nod(data[i]), head);
+                    insertElementBefore(head, new Nod(data[i]));
                 }
 
             }
@@ -537,4 +539,5 @@ public class VectorTest {
         }
 
     }
-}
+
+    }
