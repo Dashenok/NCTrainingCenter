@@ -31,47 +31,37 @@ public class Vectors {
         }
     }
 
-    public static void outputVector(Vector v, OutputStream out){
-        try {
+    public static void outputVector(Vector v, OutputStream out) throws IOException{
             int l = v.getSize();
             DataOutputStream dataOutputStream = new DataOutputStream(out);
             dataOutputStream.writeInt(l);
             for (int i = 0; i < l; i++) {
                 dataOutputStream.writeDouble(v.getElement(i));
             }
-            out.close();
-        }
-        catch(IOException e) {
-            System.out.println("Some error occurred!");
-        }
+
     }
-    public static Vector inputVector(InputStream in){
-        try {
-            DataInputStream dataInputStream = new DataInputStream(in);
-            int l = dataInputStream.readInt();
-            ArrayVector arrayVector = new ArrayVector(l);
-            for (int i = 0; i < l; i++) {
-                arrayVector.setElement(i, dataInputStream.readDouble());
-            }
-            return arrayVector;
+    public static Vector inputVector(InputStream in) throws IOException{
+        DataInputStream dataInputStream = new DataInputStream(in);
+        int l = dataInputStream.readInt();
+        ArrayVector arrayVector = new ArrayVector(l);
+        for (int i = 0; i < l; i++) {
+            arrayVector.setElement(i, dataInputStream.readDouble());
         }
-        catch(IOException e) {
-            System.out.println("Some error occurred!");
-        }
-        return null;
+        return arrayVector;
+
     }
     public static void writeVector(Vector v, Writer out){
 
         int l = v.getSize();
         PrintWriter printWriter = new PrintWriter(out);
-        printWriter.print(l + " ");
+        printWriter.print(l);
         for (int i = 0; i < l; i++) {
-            printWriter.print(v.getElement(i) + " ");
+            printWriter.print(" " + v.getElement(i));
         }
+        printWriter.println();
 
     }
-    public static Vector readVector(Reader in){
-        try {
+    public static Vector readVector(Reader in) throws IOException{
             StreamTokenizer st = new StreamTokenizer(in);
             st.nextToken();
             int size = (int) st.nval;
@@ -82,9 +72,5 @@ public class Vectors {
             }
             return v;
 
-        } catch (IOException e) {
-            System.out.println("Some error occurred!");
-        }
-        return null;
     }
 }
