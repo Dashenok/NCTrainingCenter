@@ -33,9 +33,8 @@ public class LinkedVector implements Vector, Cloneable, Serializable{
     protected void insertElementBefore(Nod current, Nod newNod) {
         newNod.next = current;
         newNod.prev = current.prev;
-        current.prev = newNod;
         current.prev.next = newNod;
-
+        current.prev = newNod;
         size++;
     }
 
@@ -77,6 +76,7 @@ public class LinkedVector implements Vector, Cloneable, Serializable{
 
     public void fillFromMass(double[] newMass){
         int l = newMass.length;
+        size = 0;
         for (int i = 0; i < l; i++) {
             addElement(newMass[i]);
         }
@@ -85,6 +85,7 @@ public class LinkedVector implements Vector, Cloneable, Serializable{
     public void fillFromVector(Vector newVector){
 
         int l  = newVector.getSize();
+        size = 0;
         for (int i = 0; i < l; i++) {
             addElement(newVector.getElement(i));
         }
@@ -140,15 +141,19 @@ public class LinkedVector implements Vector, Cloneable, Serializable{
         }
         if (index == size){
             addElement(element);
-        } else {
+        } else{
             Nod newNod = new Nod(element);
             Nod currentNod = goToElement(index);
             insertElementBefore(currentNod, newNod);
+            if (index == 0) {head = newNod;}
         }
 
     }
 
     public void deleteElement(int index){
+        if (index < 0 || index > size){
+            throw new VectorIndexOutOfBoundsException();
+        }
         Nod currentElement = goToElement(index);
         delElement(currentElement);
     }
