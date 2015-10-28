@@ -1,7 +1,7 @@
-package JAVA.JL5.Vector.impl;
+package JAVA.JL56.vector.impl;
 
-import JAVA.JL5.Vector.Exceptions.*;
-import JAVA.JL5.Vector.*;
+import JAVA.JL56.vector.exceptions.*;
+import JAVA.JL56.vector.*;
 
 import java.io.Serializable;
 

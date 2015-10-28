@@ -1,7 +1,7 @@
 package JAVA.JL4.impl;
 
 import JAVA.JL4.*;
-import JAVA.JL4.Exceptions.*;
+import JAVA.JL4.exceptions.*;
 
 public class ArrayVector implements Vector, Cloneable {
     protected int size;

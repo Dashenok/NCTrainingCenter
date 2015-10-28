@@ -1,6 +1,7 @@
-package JAVA.JL5.Vector;
+package JAVA.JL56.vector;
 
-import JAVA.JL5.Vector.impl.ArrayVector;
+
+import JAVA.JL56.vector.impl.ArrayVector;
 
 import java.io.*;
 

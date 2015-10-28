@@ -1,6 +1,6 @@
 package JAVA.JL3;
 
-import JAVA.JL3.Exceptions.*;
+import JAVA.JL3.exceptions.*;
 
 public interface Vector {
 

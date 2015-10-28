@@ -1,5 +1,5 @@
-package JAVA.JL5.Vector;
-import JAVA.JL5.Vector.Exceptions.*;
+package JAVA.JL56.vector;
+import JAVA.JL56.vector.exceptions.*;
 
 public interface Vector {
 

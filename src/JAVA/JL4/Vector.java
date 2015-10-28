@@ -1,6 +1,6 @@
 package JAVA.JL4;
 
-import JAVA.JL4.Exceptions.*;
+import JAVA.JL4.exceptions.*;
 
 public interface Vector {
 

@@ -1,12 +1,13 @@
 package JAVA.JL4.impl;
 
 import JAVA.JL4.*;
-import JAVA.JL4.Exceptions.*;
+import JAVA.JL4.exceptions.*;
 
+import java.io.Serializable;
 
-public class LinkedVector implements Vector {
+public class LinkedVector implements Vector, Cloneable, Serializable{
 
-    public class Nod {
+    public class Nod  implements Serializable{
         public double element;
         public Nod next;
         public Nod prev;
@@ -32,9 +33,8 @@ public class LinkedVector implements Vector {
     protected void insertElementBefore(Nod current, Nod newNod) {
         newNod.next = current;
         newNod.prev = current.prev;
-        current.prev = newNod;
         current.prev.next = newNod;
-
+        current.prev = newNod;
         size++;
     }
 
@@ -75,18 +75,18 @@ public class LinkedVector implements Vector {
 
 
     public void fillFromMass(double[] newMass){
-        size = newMass.length;
-        head = new Nod(newMass[0]);
-        for (int i = 1; i < size; i++) {
-           addElement(newMass[i]);
+        int l = newMass.length;
+        size = 0;
+        for (int i = 0; i < l; i++) {
+            addElement(newMass[i]);
         }
     }
 
     public void fillFromVector(Vector newVector){
 
-        size = newVector.getSize();
-        head = new Nod(newVector.getElement(0));
-        for (int i = 1; i < size; i++) {
+        int l  = newVector.getSize();
+        size = 0;
+        for (int i = 0; i < l; i++) {
             addElement(newVector.getElement(i));
         }
     }
@@ -99,11 +99,11 @@ public class LinkedVector implements Vector {
         }
     }
 
-    public void sum(Vector newVector) throws IncompatibleVectorSizesException{
+    public void sum(Vector newVector) throws IncompatibleVectorSizesException {
 
 
         if (size != newVector.getSize()){
-           throw new IncompatibleVectorSizesException();
+            throw new IncompatibleVectorSizesException();
         }
 
         Nod currentElement = head;
@@ -128,8 +128,9 @@ public class LinkedVector implements Vector {
             Nod newElement = new Nod(element);
             newElement.next = head;
             newElement.prev = head.prev;
-            head.prev = newElement;
             head.prev.next = newElement;
+            head.prev = newElement;
+
         }
         size++;
     }
@@ -140,15 +141,19 @@ public class LinkedVector implements Vector {
         }
         if (index == size){
             addElement(element);
-        } else {
+        } else{
             Nod newNod = new Nod(element);
             Nod currentNod = goToElement(index);
             insertElementBefore(currentNod, newNod);
+            if (index == 0) {head = newNod;}
         }
 
     }
 
     public void deleteElement(int index){
+        if (index < 0 || index > size){
+            throw new VectorIndexOutOfBoundsException();
+        }
         Nod currentElement = goToElement(index);
         delElement(currentElement);
     }

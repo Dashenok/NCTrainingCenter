@@ -1,7 +1,7 @@
-package JAVA.JL5;
+package JAVA.JL56;
 
-import JAVA.JL5.Vector.*;
-import JAVA.JL5.Vector.impl.*;
+import JAVA.JL56.vector.*;
+import JAVA.JL56.vector.impl.*;
 
 import java.io.*;
 

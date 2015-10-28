@@ -1,7 +1,7 @@
-package JAVA.JL5.Vector;
+package JAVA.JL56.vector;
 
-import JAVA.JL5.Vector.Exceptions.*;
-import JAVA.JL5.Vector.impl.*;
+import JAVA.JL56.vector.exceptions.*;
+import JAVA.JL56.vector.impl.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
