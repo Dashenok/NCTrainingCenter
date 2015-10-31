@@ -1,6 +1,7 @@
 package JL78.vector.container;
 
 import JL78.vector.Vector;
+import JL78.vector.exceptions.VectorIndexOutOfBoundsException;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,12 +37,22 @@ public class VectorList extends VectorCollection implements List {
 
     @Override
     public Object get(int index) {
-        return null;
+        if (index < 0 || index > arr.length-1){
+            throw new VectorIndexOutOfBoundsException();
+        }
+        return  arr[index];
     }
 
     @Override
     public Object set(int index, Object element) {
-        return null;
+        if (index < 0 || index > arr.length-1){
+            throw new VectorIndexOutOfBoundsException();
+        }
+        Object prevElement = arr[index];
+        if (element instanceof Vector){
+            arr[index] = (Vector)element;
+        }
+        return prevElement;
     }
 
     @Override

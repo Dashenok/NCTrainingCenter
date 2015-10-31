@@ -3,10 +3,8 @@ package JL78.vector.container;
 
 import JL78.vector.Vector;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Objects;
 
 
 public class VectorCollection implements Collection {
