@@ -56,8 +56,31 @@ public class VectorList extends VectorCollection implements List {
     }
 
     @Override
-    public void add(int index, Object element) {
+    public void add(int index, Object element) throws ClassCastException, NullPointerException,
+                                                      IndexOutOfBoundsException{
+        if (element instanceof Vector) {
+            if (index < 0 || index > arr.length - 1) {
+                throw new IndexOutOfBoundsException();
+            }
+            if (element == null){
+                throw new NullPointerException();
+            }
+            int l = arr.length;
+            if (index == l){
+                Vector[] tempArray = new Vector[l + 1];
+                System.arraycopy(arr, 0, tempArray, 0, l);
+                tempArray[index] = (Vector)element;
+            } else {
+                Vector[] tempArray = new Vector[l + 1];
+                System.arraycopy(arr, 0, tempArray, 0, index);
+                tempArray[index] = (Vector)element;
+                System.arraycopy(arr, index, tempArray, index + 1, l - index);
+                fillFromMass(tempArray);
+            }
 
+        }else {
+            throw new ClassCastException();
+        }
     }
 
     @Override
