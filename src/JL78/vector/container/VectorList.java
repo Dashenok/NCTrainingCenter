@@ -84,18 +84,47 @@ public class VectorList extends VectorCollection implements List {
     }
 
     @Override
-    public Object remove(int index) {
-        return null;
+    public Object remove(int index) throws IndexOutOfBoundsException{
+        if (index < 0 || index > arr.length - 1) {
+            throw new IndexOutOfBoundsException();
+        }
+        Object deletedObject = arr[index];
+        int l = arr.length;
+        Vector[] tempArray = new Vector[l - 1];
+        System.arraycopy(arr, 0, tempArray, 0, index);
+        if (index != l -1) {
+            System.arraycopy(arr, index + 1, tempArray, index, l - index - 1);
+        }
+        fillFromMass(tempArray);
+        return deletedObject;
     }
 
     @Override
-    public int indexOf(Object o) {
-        return 0;
+    public int indexOf(Object o) throws ClassCastException{
+        if (o instanceof Vector) {
+            for (int i = 0; i < arr.length; i++) {
+                if (o == arr[i]){
+                    return i;
+                }
+            }
+            return -1;
+        }else{
+            throw new ClassCastException();
+        }
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        return 0;
+        if (o instanceof Vector) {
+            for (int i = arr.length-1; i >=0 ; i--) {
+                if (o == arr[i]){
+                    return i;
+                }
+            }
+            return -1;
+        }else{
+            throw new ClassCastException();
+        }
     }
 
     @Override
@@ -109,7 +138,16 @@ public class VectorList extends VectorCollection implements List {
     }
 
     @Override
-    public List subList(int fromIndex, int toIndex) {
-        return null;
+    public List subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException{
+        if (fromIndex < 0 || toIndex > arr.length - 1 || fromIndex > toIndex) {
+            throw new IndexOutOfBoundsException();
+        }
+        Vector[] newVectorArr = new Vector[toIndex-fromIndex];
+        int newArrIndex = 0;
+        for (int i = fromIndex; i < toIndex; i++) {
+            newVectorArr[newArrIndex] = arr[fromIndex];
+        }
+        VectorList newVectorList = new VectorList(newVectorArr);
+        return newVectorList;
     }
 }
