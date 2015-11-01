@@ -3,6 +3,7 @@ package JL78.vector.container;
 import JL78.vector.Vector;
 import JL78.vector.exceptions.VectorIndexOutOfBoundsException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
@@ -15,43 +16,52 @@ public class VectorList extends VectorCollection implements List {
     }
 
     @Override
-    public boolean addAll(int index, Collection c) {
+    public boolean addAll(int index, Collection c) throws ClassCastException, NullPointerException,
+                                                          IndexOutOfBoundsException, IllegalArgumentException{
+        if (!(c instanceof VectorCollection)){
+            throw new ClassCastException();
+        }
+        Vector[] newVectorArray = (Vector[]) c.toArray();
         for (int i = 0; i < c.size(); i++) {
-            Vector[] tempArray = new Vector[arr.length+1];
-            System.arraycopy(arr, 0, tempArray, 0, arr.length);
-            tempArray[arr.length] = (Vector)get(i);
-            fillFromMass(tempArray);
+            if (!(newVectorArray[i] instanceof Vector)) {
+                throw new IllegalArgumentException();
+            }
+            if (newVectorArray[i] == null){
+                throw new NullPointerException();
+            }
+        }
+        if (index < 0 || index > arr.length-1){
+            throw new IndexOutOfBoundsException();
+        }
+        for (int i = index, j = 0; i < c.size(); i++, j++) {
+            add(i, newVectorArray[j]);
         }
         return true;
-    }
 
-    private void fillFromMass(Vector[] tempArray) {
-        int newMassLength = tempArray.length;
-        if (arr.length != newMassLength){
-            arr = new Vector[arr.length];
-        }
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = tempArray[i];
-        }
     }
 
     @Override
-    public Object get(int index) {
+    public Object get(int index)  throws IndexOutOfBoundsException{
         if (index < 0 || index > arr.length-1){
-            throw new VectorIndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException();
         }
         return  arr[index];
     }
 
     @Override
-    public Object set(int index, Object element) {
+    public Object set(int index, Object element) throws IndexOutOfBoundsException, ClassCastException,
+                                                        NullPointerException{
         if (index < 0 || index > arr.length-1){
-            throw new VectorIndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException();
+        }
+        if (!(element instanceof Vector)){
+            throw new ClassCastException();
+        }
+        if (element == null){
+            throw new NullPointerException();
         }
         Object prevElement = arr[index];
-        if (element instanceof Vector){
-            arr[index] = (Vector)element;
-        }
+        arr[index] = (Vector)element;
         return prevElement;
     }
 
@@ -66,17 +76,17 @@ public class VectorList extends VectorCollection implements List {
                 throw new NullPointerException();
             }
             int l = arr.length;
+            Vector[] tempArray = new Vector[l + 1];
             if (index == l){
-                Vector[] tempArray = new Vector[l + 1];
                 System.arraycopy(arr, 0, tempArray, 0, l);
                 tempArray[index] = (Vector)element;
             } else {
-                Vector[] tempArray = new Vector[l + 1];
                 System.arraycopy(arr, 0, tempArray, 0, index);
                 tempArray[index] = (Vector)element;
                 System.arraycopy(arr, index, tempArray, index + 1, l - index);
-                fillFromMass(tempArray);
+
             }
+            fillFromMass(tempArray);
 
         }else {
             throw new ClassCastException();
@@ -149,5 +159,15 @@ public class VectorList extends VectorCollection implements List {
         }
         VectorList newVectorList = new VectorList(newVectorArr);
         return newVectorList;
+    }
+
+    private void fillFromMass(Vector[] tempArray) {
+        int newMassLength = tempArray.length;
+        if (arr.length != newMassLength){
+            arr = new Vector[arr.length];
+        }
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = tempArray[i];
+        }
     }
 }
