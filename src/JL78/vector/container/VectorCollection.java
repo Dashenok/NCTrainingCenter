@@ -33,12 +33,14 @@ public class VectorCollection implements Collection {
                     return true;
                 }
             }
+        }else {
+            throw new ClassCastException();
         }
         return false;
     }
 
     @Override
-    public Iterator iterator() throws UnsupportedOperationException {
+    public Iterator iterator() {
         throw new UnsupportedOperationException();
     }
 
