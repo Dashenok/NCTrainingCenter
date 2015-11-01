@@ -22,11 +22,7 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean isEmpty() {
-        if (arr.length == 0){
-            return true;
-        } else {
-            return false;
-        }
+        return arr.length == 0;
     }
 
     @Override
