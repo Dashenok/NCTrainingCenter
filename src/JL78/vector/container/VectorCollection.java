@@ -63,7 +63,7 @@ public class VectorCollection implements Collection {
             Vector[] tempArray = new Vector[arr.length];
             System.arraycopy(arr, 0, tempArray, 0, arr.length);
             arr = new Vector[arr.length + 1];
-            System.arraycopy(arr, 0, tempArray, 0, arr.length);
+            System.arraycopy(tempArray, 0, arr, 0, arr.length-1);
             arr[arr.length] = (Vector)o;
             return true;
         } else {
