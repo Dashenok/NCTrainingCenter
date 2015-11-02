@@ -64,7 +64,7 @@ public class VectorCollection implements Collection {
             System.arraycopy(arr, 0, tempArray, 0, arr.length);
             arr = new Vector[arr.length + 1];
             System.arraycopy(tempArray, 0, arr, 0, arr.length-1);
-            arr[arr.length] = (Vector)o;
+            arr[arr.length-1] = (Vector)o;
             return true;
         } else {
             throw new ClassCastException();
@@ -95,11 +95,10 @@ public class VectorCollection implements Collection {
     @Override
     public boolean addAll(Collection c) {
         int countOfContains = 0;
-        for (Object o : c){
-            if (!contains(o)){
-                add(o);
+        Vector[] newVectorArray = (Vector[])c.toArray();
+        for (int i = 0; i < newVectorArray.length; i++){
+                add(newVectorArray[i]);
                 countOfContains++;
-            }
         }
         if (countOfContains == 0){return false;}
         return true;
@@ -107,7 +106,7 @@ public class VectorCollection implements Collection {
 
     @Override
     public void clear() {
-        arr = null;
+        arr = new Vector[0];
     }
 
     @Override
@@ -127,11 +126,13 @@ public class VectorCollection implements Collection {
     @Override
     public boolean removeAll(Collection c) {
         int countOfContains = 0;
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < arr.length;) {
             if (c.contains(arr[i])){
                 remove(arr[i]);
                 countOfContains++;
-            }
+            }else{
+                i++;
+            };
         }
         if (countOfContains == 0){return false;}
         return true;
@@ -141,13 +142,12 @@ public class VectorCollection implements Collection {
     public boolean containsAll(Collection c) {
         int countOfContains = 0;
         for (Object o : c) {
-            if (o instanceof Vector){
                 for (int i = 0; i < arr.length; i++) {
                     if (o == arr[i]){
                         countOfContains++;
+                        break;
                     }
                 }
-            } else {return false;}
         }
         if (countOfContains == c.size()){
             return true;
