@@ -14,18 +14,13 @@ public class VectorList extends VectorCollection implements List {
     }
 
     @Override
-    public boolean addAll(int index, Collection c) throws ClassCastException, NullPointerException,
+    public boolean addAll(int index, Collection c) throws ClassCastException,
                                                           IndexOutOfBoundsException, IllegalArgumentException{
-        if (!(c instanceof VectorCollection)){
-            throw new ClassCastException();
-        }
-        Vector[] newVectorArray = (Vector[]) c.toArray();
+
+        Object[] newVectorArray = (Object[]) c.toArray();
         for (int i = 0; i < c.size(); i++) {
-            if (!(newVectorArray[i] instanceof Vector)) {
+            if (!(newVectorArray[i] instanceof Vector) && newVectorArray[i] != null) {
                 throw new IllegalArgumentException();
-            }
-            if (newVectorArray[i] == null){
-                throw new NullPointerException();
             }
         }
         if (index < 0 || index > arr.length-1){
@@ -55,9 +50,6 @@ public class VectorList extends VectorCollection implements List {
         if (!(element instanceof Vector)){
             throw new ClassCastException();
         }
-        if (element == null){
-            throw new NullPointerException();
-        }
         Object prevElement = arr[index];
         arr[index] = (Vector)element;
         return prevElement;
@@ -70,9 +62,6 @@ public class VectorList extends VectorCollection implements List {
             if (index < 0 || index > arr.length - 1) {
                 throw new IndexOutOfBoundsException();
             }
-            if (element == null){
-                throw new NullPointerException();
-            }
             int l = arr.length;
             Vector[] tempArray = new Vector[l + 1];
             if (index == l){
@@ -84,7 +73,7 @@ public class VectorList extends VectorCollection implements List {
                 System.arraycopy(arr, index, tempArray, index + 1, l - index);
 
             }
-            fillFromMass(tempArray);
+            arr = tempArray;
 
         }else {
             throw new ClassCastException();
@@ -103,15 +92,19 @@ public class VectorList extends VectorCollection implements List {
         if (index != l -1) {
             System.arraycopy(arr, index + 1, tempArray, index, l - index - 1);
         }
-        fillFromMass(tempArray);
+        arr = tempArray;
         return deletedObject;
     }
 
     @Override
     public int indexOf(Object o) throws ClassCastException{
-        if (o instanceof Vector) {
+        if ((o instanceof Vector) || (o == null)) {
             for (int i = 0; i < arr.length; i++) {
-                if (o == arr[i]){
+                if (arr[i] == null){
+                    if (o == null) {
+                        return i;
+                    }
+                }else if ((arr[i].equals(o))){
                     return i;
                 }
             }
@@ -123,9 +116,13 @@ public class VectorList extends VectorCollection implements List {
 
     @Override
     public int lastIndexOf(Object o) {
-        if (o instanceof Vector) {
+        if ((o instanceof Vector) || (o == null)){
             for (int i = arr.length-1; i >=0 ; i--) {
-                if (o == arr[i]){
+                if (arr[i] == null){
+                    if (o == null) {
+                        return i;
+                    }
+                }else if ((arr[i].equals(o))){
                     return i;
                 }
             }
@@ -153,7 +150,7 @@ public class VectorList extends VectorCollection implements List {
         Vector[] newVectorArr = new Vector[toIndex-fromIndex];
         int newArrIndex = 0;
         for (int i = fromIndex; i < toIndex; i++) {
-            newVectorArr[newArrIndex] = arr[fromIndex];
+            newVectorArr[newArrIndex++] = arr[i];
         }
         VectorList newVectorList = new VectorList(newVectorArr);
         return newVectorList;

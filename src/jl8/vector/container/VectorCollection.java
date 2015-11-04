@@ -27,14 +27,8 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean contains(Object o) {
-        if (o instanceof Vector){
-            for (int i = 0; i < arr.length; i++) {
-                if (o == arr[i]){
-                    return true;
-                }
-            }
-        }else {
-            throw new ClassCastException();
+        for (int i = 0; i < arr.length; i++) {
+            return o == null ? arr[i] == null : arr[i].equals(o);
         }
         return false;
     }
@@ -59,7 +53,7 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean add(Object o){
-        if (o instanceof Vector) {
+        if ((o instanceof Vector) || o == null){
             Vector[] tempArray = new Vector[arr.length];
             System.arraycopy(arr, 0, tempArray, 0, arr.length);
             arr = new Vector[arr.length + 1];
@@ -73,9 +67,9 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean remove(Object o) {
-        if (o instanceof Vector) {
+        if ((o instanceof Vector) || o == null){
             for (int i = 0; i < arr.length; i++) {
-                if (arr[i].equals(o)) {
+                if (o == null ? arr[i] == null : arr[i].equals(o)) {
                     Vector[] tempArray = new Vector[arr.length - 1];
                     System.arraycopy(arr, 0, tempArray, 0, i);
                     if (i != arr.length - 1) {
@@ -96,11 +90,15 @@ public class VectorCollection implements Collection {
     public boolean addAll(Collection c) {
         int countOfContains = 0;
         Vector[] newVectorArray = (Vector[])c.toArray();
+        Vector[] tempArr = arr.clone();
+        arr = new Vector[arr.length + newVectorArray.length];
         for (int i = 0; i < newVectorArray.length; i++){
-                add(newVectorArray[i]);
+                arr[i + arr.length] = newVectorArray[i];
                 countOfContains++;
         }
-        if (countOfContains == 0){return false;}
+        if (countOfContains == 0){
+            return false;
+        }
         return true;
     }
 
@@ -112,10 +110,12 @@ public class VectorCollection implements Collection {
     @Override
     public boolean retainAll(Collection c) {
         int countOfContains = 0;
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < arr.length; ) {
             if (!c.contains(arr[i])){
                 remove(arr[i]);
                 countOfContains++;
+            } else {
+                i++;
             }
         }
         if (countOfContains == 0){return false;}
@@ -131,8 +131,8 @@ public class VectorCollection implements Collection {
                 remove(arr[i]);
                 countOfContains++;
             }else{
-                i++;
-            };
+                i++;//Ask
+            }
         }
         if (countOfContains == 0){return false;}
         return true;
@@ -144,17 +144,14 @@ public class VectorCollection implements Collection {
         Vector[] newVectorArray = (Vector[]) c.toArray();
         for (int j = 0; j < newVectorArray.length; j++) {
                 for (int i = 0; i < arr.length; i++) {
-                    if (newVectorArray[j] == arr[i]){
-                        countOfContains++;
-                        break;
+                    if (!newVectorArray[j].equals(arr[i])){
+                        return false;
                     }
                 }
         }
-        if (countOfContains == c.size()){
-            return true;
-        }
 
-        return false;
+
+        return true;
     }
 
 
