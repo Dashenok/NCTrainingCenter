@@ -1,0 +1,325 @@
+drop table OBJTYPE CASCADE CONSTRAINTS;
+drop table ATTRTYPE CASCADE CONSTRAINTS;
+drop table OBJECTS CASCADE CONSTRAINTS;
+drop table ATTRIBUTES CASCADE CONSTRAINTS;
+drop table OBJREFERENCE CASCADE CONSTRAINTS;
+drop SEQUENCE USEQ;
+--2. В БД создать таблицы БД типа EAV/CR.
+CREATE TABLE OBJTYPE
+  (
+    OBJECT_TYPE_ID NUMBER(20) NOT NULL ENABLE,
+    PARENT_ID      NUMBER(20),
+    CODE           VARCHAR2(20) NOT NULL UNIQUE,
+    NAME           VARCHAR2(200 BYTE),
+    DESCRIPTION    VARCHAR2(1000 BYTE),
+    CONSTRAINT CON_OBJECT_TYPE_ID PRIMARY KEY (OBJECT_TYPE_ID),
+    CONSTRAINT CON_PARENT_ID FOREIGN KEY (PARENT_ID) REFERENCES OBJTYPE (OBJECT_TYPE_ID) ON DELETE CASCADE ENABLE
+  );
+
+CREATE TABLE ATTRTYPE (
+    ATTR_ID      		    NUMBER(20) NOT NULL,
+    OBJECT_TYPE_ID 		  NUMBER(20) NOT NULL,
+    OBJECT_TYPE_ID_REF 	NUMBER(20),
+    CODE         		    VARCHAR2(20),
+    NAME         		    VARCHAR2(200 BYTE),
+    CONSTRAINT CON_ATTR_ID PRIMARY KEY (ATTR_ID),
+    CONSTRAINT CON_ATTR_OBJECT_TYPE_ID FOREIGN KEY (OBJECT_TYPE_ID) REFERENCES OBJTYPE (OBJECT_TYPE_ID),
+	CONSTRAINT CON_ATTR_OBJECT_TYPE_ID_REF FOREIGN KEY (OBJECT_TYPE_ID_REF) REFERENCES OBJTYPE (OBJECT_TYPE_ID)
+);
+  
+CREATE TABLE OBJECTS (
+    OBJECT_ID      NUMBER(20) NOT NULL,
+    PARENT_ID      NUMBER(20),
+    OBJECT_TYPE_ID NUMBER(20) NOT NULL,
+    NAME           VARCHAR2(2000 BYTE),
+    DESCRIPTION    VARCHAR2(4000 BYTE),
+    CONSTRAINT CON_OBJECTS_ID PRIMARY KEY (OBJECT_ID),
+    CONSTRAINT CON_PARENTS_ID FOREIGN KEY (PARENT_ID) REFERENCES OBJECTS (OBJECT_ID) ON DELETE CASCADE DEFERRABLE,
+    CONSTRAINT CON_OBJ_TYPE_ID FOREIGN KEY (OBJECT_TYPE_ID) REFERENCES OBJTYPE (OBJECT_TYPE_ID)
+);
+
+CREATE TABLE ATTRIBUTES
+  (
+    ATTR_ID    NUMBER(20) NOT NULL,
+    OBJECT_ID  NUMBER(20) NOT NULL,
+    VALUE      VARCHAR2(4000 BYTE),
+    DATE_VALUE DATE,
+    CONSTRAINT CON_ATTRIBUTES_PK PRIMARY KEY (ATTR_ID,OBJECT_ID),
+    CONSTRAINT CON_AOBJECT_ID FOREIGN KEY (OBJECT_ID) REFERENCES OBJECTS (OBJECT_ID) ON DELETE CASCADE,
+    CONSTRAINT CON_AATTR_ID FOREIGN KEY (ATTR_ID) REFERENCES ATTRTYPE (ATTR_ID) ON DELETE CASCADE
+  );
+
+CREATE TABLE OBJREFERENCE
+  (
+    ATTR_ID   NUMBER(20) NOT NULL,
+    OBJECT_ID NUMBER(20) NOT NULL,
+    REFERENCE NUMBER(20) NOT NULL,
+    CONSTRAINT CON_OBJREFERENCE_PK PRIMARY KEY (ATTR_ID,REFERENCE,OBJECT_ID),
+    CONSTRAINT CON_REFERENCE FOREIGN KEY (REFERENCE) REFERENCES OBJECTS (OBJECT_ID) ON DELETE CASCADE,
+    CONSTRAINT CON_ROBJECT_ID FOREIGN KEY (OBJECT_ID) REFERENCES OBJECTS (OBJECT_ID) ON DELETE CASCADE,
+    CONSTRAINT CON_RATTR_ID FOREIGN KEY (ATTR_ID) REFERENCES ATTRTYPE (ATTR_ID) ON DELETE CASCADE
+  );
+
+
+--3. Для классов из UML-диаграммы, описывающих города и подразделения, заполнить описания типов
+--   объектов, типов атрибутов.
+INSERT INTO OBJTYPE VALUES (1, null, 'CNTRY', 'Country', '');
+INSERT INTO OBJTYPE VALUES (2, 1, 'CITY', 'City', '');
+INSERT INTO OBJTYPE VALUES (3, 2, 'LOC', 'Location', '');
+INSERT INTO OBJTYPE VALUES (4, null, 'DEPT', 'Department', '');
+
+INSERT INTO ATTRTYPE VALUES (5, 1, null, 'NAME', 'Country name');
+
+INSERT INTO ATTRTYPE VALUES (6, 2, 1, 'NAME', 'City name');
+
+INSERT INTO ATTRTYPE VALUES (8, 3, 2, 'STREET', 'Street');
+INSERT INTO ATTRTYPE VALUES (9, 3, 2, 'ZIPCODE', 'Postal code');
+INSERT INTO ATTRTYPE VALUES (10, 3, 2, 'BLD', 'Building');
+INSERT INTO ATTRTYPE VALUES (11, 3, 2, 'APT', 'Apartment');
+
+INSERT INTO ATTRTYPE VALUES (13, 4, null, 'NAME', 'Department name');
+INSERT INTO ATTRTYPE VALUES (14, 4, null, 'TYPE', 'Department type');
+INSERT INTO ATTRTYPE VALUES (15, 4, null, 'NUMBER', 'Department number');
+--4. Для каждого класса создать по два экземпляра объекта, заполнив соответствующие таблицы.
+INSERT INTO OBJECTS VALUES (16, null, 1, 'FRANCE', 'France');
+INSERT INTO OBJECTS VALUES (17, null, 1, 'GERMAN', 'German');
+
+INSERT INTO OBJECTS VALUES (18, 16, 2, 'PARIS', 'Paris');
+INSERT INTO OBJECTS VALUES (19, 17, 2, 'BERLIN', 'Berlin');
+
+INSERT INTO OBJECTS VALUES (20, 18, 3, 'PARIS1', 'Paris-1');
+INSERT INTO OBJECTS VALUES (21, 19, 3, 'BERLINMAIN', 'Berlin main');
+
+INSERT INTO OBJECTS VALUES (22, 20, 4, 'PARIS1DEPT', 'Paris-1 department');
+INSERT INTO OBJECTS VALUES (23, 21, 4, 'BERLINMAINDEPT', 'Berlin main department');
+
+INSERT INTO ATTRIBUTES VALUES (6, 18, 'Paris', null);
+INSERT INTO ATTRIBUTES VALUES (6, 19, 'Berlin', null);
+
+INSERT INTO ATTRIBUTES VALUES (5, 16, 'France', null);
+INSERT INTO ATTRIBUTES VALUES (5, 17, 'German', null);
+
+INSERT INTO ATTRIBUTES VALUES (13, 22, 'Paris-1 department', null);
+INSERT INTO ATTRIBUTES VALUES (13, 23, 'Berlin main department', null);
+
+-- 5. Выполнить запрос к БД, который получает название городов и подразделений.
+SELECT ac.value AS City, ad.value AS Department
+FROM OBJECTS oc, OBJECTS ol, OBJECTS od, ATTRIBUTES ac, ATTRIBUTES ad
+WHERE oc.OBJECT_TYPE_ID = 2 /*City*/
+AND ol.OBJECT_TYPE_ID = 3 /*Location*/
+AND oc.OBJECT_ID = ol.PARENT_ID
+AND od.OBJECT_TYPE_ID = 4/*DEPT*/
+AND ol.OBJECT_ID = od.PARENT_ID
+AND ac.ATTR_ID = 6
+AND ac.OBJECT_ID = oc.OBJECT_ID
+AND ad.ATTR_ID = 13
+AND ad.OBJECT_ID = od.OBJECT_ID;
+
+-- 6. Для классов из UML-диаграммы, описывающих сотрудников, заполнить описания типов объектов,
+-- типов атрибутов.
+
+INSERT INTO OBJTYPE VALUES (24, null, 'EMP', 'Employee', '');
+INSERT INTO OBJTYPE VALUES (25, 24, 'MGR', 'Manager', '');
+INSERT INTO OBJTYPE VALUES (32, null, 'JOB', 'Job', '');
+
+INSERT INTO ATTRTYPE VALUES (26, 24, null, 'FIRSTNAME', 'First name');
+INSERT INTO ATTRTYPE VALUES (27, 24, null, 'LASTNAME', 'Last name');
+INSERT INTO ATTRTYPE VALUES (28, 24, null, 'HIREDATE', 'Hire date');
+INSERT INTO ATTRTYPE VALUES (29, 24, null, 'SALARY', 'Salary');
+INSERT INTO ATTRTYPE VALUES (30, 24, null, 'COMM', 'Commision');
+INSERT INTO ATTRTYPE VALUES (12, 24, null, 'PHONENUMBER', 'Phone number');
+
+INSERT INTO ATTRTYPE VALUES (31, 24, 4, 'WORK', 'Work');
+INSERT INTO ATTRTYPE VALUES (32, 24, 25, 'MANAGE', 'Manage');
+INSERT INTO ATTRTYPE VALUES (33, 24, 32, 'OCCUPY', 'Occupy');
+
+-- 7. Для каждого класса создать по два экземпляра объекта, заполнив соответствующие таблицы.
+
+INSERT INTO OBJECTS VALUES (34, null, 24, 'MAXMIKHOV', 'Max Mikhov');
+INSERT INTO OBJECTS VALUES (35, null, 24, 'DARIASTRUTS', 'Daria Struts');
+
+INSERT INTO OBJECTS VALUES (36, 34, 25, 'MAXMIKHOV', 'Max Mikhov');
+INSERT INTO OBJECTS VALUES (37, 35, 25, 'DARIASTRUTS', 'Daria Struts');
+
+INSERT INTO OBJECTS VALUES (38, null, 32, 'QA', 'QA');
+INSERT INTO OBJECTS VALUES (39, null, 32, 'Developer', 'Developer');
+
+INSERT INTO ATTRIBUTES VALUES (26, 34, 'Max', null);
+INSERT INTO ATTRIBUTES VALUES (27, 34, 'Mikhov', null);
+INSERT INTO ATTRIBUTES VALUES (28, 34,  null, TO_DATE('05-02-2001', 'dd-mm-yyyy'));
+INSERT INTO ATTRIBUTES VALUES (29, 34, '3000', null);
+INSERT INTO ATTRIBUTES VALUES (30, 34, '', null);
+INSERT INTO ATTRIBUTES VALUES (12, 34, '567567567', null);
+
+INSERT INTO OBJREFERENCE VALUES(31, 34, 22);
+INSERT INTO OBJREFERENCE VALUES(32, 34, 36);
+INSERT INTO OBJREFERENCE VALUES(33, 34, 38);
+
+INSERT INTO ATTRIBUTES VALUES (26, 35, 'Daria', null);
+INSERT INTO ATTRIBUTES VALUES (27, 35, 'Struts', null);
+INSERT INTO ATTRIBUTES VALUES (28, 35,  null, TO_DATE('05-02-2001', 'dd-mm-yyyy'));
+INSERT INTO ATTRIBUTES VALUES (29, 35, '1000000', null);
+INSERT INTO ATTRIBUTES VALUES (30, 35, '', null);
+INSERT INTO ATTRIBUTES VALUES (12, 35, '546465646', null);
+
+
+INSERT INTO OBJREFERENCE VALUES(31, 35, 22);
+INSERT INTO OBJREFERENCE VALUES(32, 35, 37);
+INSERT INTO OBJREFERENCE VALUES(33, 35, 39);
+
+-- 8. Выполнить запрос к БД, который получает фамилию сотрудников и зарплату сотрудников.
+SELECT aln.value AS LastName, asal.value AS Salary
+FROM objects oemp, attributes aln, attributes asal
+WHERE oemp.OBJECT_TYPE_ID = 24 /*Employee*/
+AND aln.attr_id = 27 /*Last name*/
+AND asal.ATTR_ID = 29 /*Salary*/
+AND oemp.OBJECT_ID = aln.OBJECT_ID
+AND oemp.OBJECT_ID = asal.OBJECT_ID;
+-- 9. Выполнить запрос к БД, который:
+-- получает названия подразделений;
+-- получает фамилии сотрудников, работающих в указанных подразделениях;
+-- подразделения расположены в одном из городов, название которого ранее было внесено.
+SELECT ad.value AS Department, aemp.value AS LastName
+FROM OBJECTS oc, OBJECTS ol, OBJECTS od, ATTRIBUTES ac, ATTRIBUTES ad, OBJECTS oemp, OBJREFERENCE empw, attributes aemp 
+WHERE oc.OBJECT_TYPE_ID = 2 /*City*/
+AND ol.OBJECT_TYPE_ID = 3 /*Location*/
+AND oc.OBJECT_ID = ol.PARENT_ID
+AND od.OBJECT_TYPE_ID = 4/*DEPT*/
+AND ol.OBJECT_ID = od.PARENT_ID
+AND ac.ATTR_ID = 6/*City name*/
+AND ac.OBJECT_ID = oc.OBJECT_ID
+AND ac.VALUE = 'Berlin'
+AND ad.ATTR_ID = 13/*Dept name*/
+AND ad.OBJECT_ID = od.OBJECT_ID
+AND oemp.OBJECT_TYPE_ID = 24/*Employee*/
+AND aemp.ATTR_ID = 27/*Last name*/
+AND aemp.OBJECT_ID = oemp.OBJECT_ID
+AND empw.ATTR_ID = 31/*Work*/
+AND empw.OBJECT_ID = oemp.OBJECT_ID
+AND empw.REFERENCE = od.OBJECT_ID;
+
+-- 10. Создать множество запросов типа INSERT INTO … SELECT, которые автоматически заполнят
+-- таблицы объектов, атрибутов и связей, взяв данные из реляционной БД, использующейся в 4-й работе с
+-- именем old_db.
+
+CREATE SEQUENCE USEQ INCREMENT BY 1 START WITH 40 MAXVALUE 5000 CYCLE;
+
+INSERT ALL
+INTO OBJECTS VALUES (USEQ.NEXTVAL, null, 1, COUNTRY_NAME, REGION_ID)
+INTO ATTRIBUTES VALUES (5, USEQ.CURRVAL, COUNTRY_NAME, null)
+SELECT COUNTRY_NAME, REGION_ID  FROM OLD_DB.COUNTRIES;
+
+INSERT ALL
+INTO OBJECTS VALUES (USEQ.NEXTVAL, COUNTRY_ID, 2, CITY, null) 
+INTO ATTRIBUTES VALUES (6, USEQ.CURRVAL, CITY, null)
+SELECT OLD_DB.LOCATIONS.CITY CITY, OBJECTS.OBJECT_ID COUNTRY_ID  FROM OLD_DB.LOCATIONS, OBJECTS, OLD_DB.COUNTRIES 
+WHERE OLD_DB.LOCATIONS.COUNTRY_ID = OLD_DB.COUNTRIES.COUNTRY_ID 
+      AND OLD_DB.COUNTRIES.COUNTRY_NAME = OBJECTS.NAME
+      AND OBJECTS.OBJECT_TYPE_ID = 1;
+
+
+INSERT ALL
+INTO OBJECTS VALUES (USEQ.NEXTVAL, City_ID, 3, Location, null)
+INTO ATTRIBUTES VALUES (8, USEQ.CURRVAL, Street_Address, null)
+INTO ATTRIBUTES VALUES (9, USEQ.CURRVAL, Postal_Code, null)
+SELECT  OLD_DB.Locations.Postal_Code||' '||Street_Address Location, 
+        OBJECTS.OBJECT_ID City_ID,
+        Street_Address,
+        Postal_Code
+FROM OLD_DB.LOCATIONS, OBJECTS 
+WHERE OLD_DB.LOCATIONS.City = OBJECTS.Name 
+      AND OBJECTS.OBJECT_TYPE_ID = 2;
+
+INSERT ALL
+INTO OBJECTS VALUES (USEQ.NEXTVAL, Location_ID, 4, DepartmentName, null)
+INTO ATTRIBUTES VALUES (13, USEQ.CURRVAL, DepartmentName, null)
+INTO ATTRIBUTES VALUES (14, USEQ.CURRVAL, 'IT', null)
+INTO ATTRIBUTES VALUES (15, USEQ.CURRVAL, DEPARTMENT_ID, null)
+SELECT  OLD_DB.DEPARTMENTS.DEPARTMENT_NAME DepartmentName,
+        OBJECTS.OBJECT_ID Location_ID,
+        OLD_DB.DEPARTMENTS.DEPARTMENT_ID
+FROM OLD_DB.LOCATIONS, OBJECTS, OLD_DB.DEPARTMENTS
+WHERE OLD_DB.DEPARTMENTS.LOCATION_ID = OLD_DB.LOCATIONS.LOCATION_ID 
+      AND OLD_DB.Locations.Postal_Code||' '||Street_Address = OBJECTS.NAME
+      AND OBJECTS.OBJECT_TYPE_ID = 3;
+
+INSERT INTO Daria_eav.Objects (OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION) 
+SELECT USEQ.NEXTVAL, null, 32, JOB_TITLE, null FROM OLD_DB.JOBS;
+
+INSERT ALL
+INTO Objects VALUES (USEQ.NEXTVAL, null, 24, EmpName, null)
+INTO ATTRIBUTES VALUES (26, USEQ.CURRVAL, FIRST_NAME, null)
+INTO ATTRIBUTES VALUES (27, USEQ.CURRVAL, LAST_NAME, null)
+INTO ATTRIBUTES VALUES (28, USEQ.CURRVAL, HIRE_DATE, null)
+INTO ATTRIBUTES VALUES (29, USEQ.CURRVAL, SALARY, null)
+INTO ATTRIBUTES VALUES (30, USEQ.CURRVAL, NVL(COMMISSION_PCT, 0), null)
+INTO ATTRIBUTES VALUES (12, USEQ.CURRVAL, PHONE_NUMBER, null)
+INTO OBJREFERENCE VALUES (31, USEQ.CURRVAL, deptID) 
+INTO OBJREFERENCE VALUES (33, USEQ.CURRVAL, jobID)  
+SELECT  emp.FIRST_NAME || ' ' || emp.LAST_NAME EmpName, 
+        emp.FIRST_NAME, 
+        emp.LAST_NAME,
+        emp.HIRE_DATE,
+        emp.SALARY,
+        emp.COMMISSION_PCT,
+        emp.PHONE_NUMBER,
+        deptobj.Object_ID deptID,
+        jobobj.Object_ID jobID
+FROM OLD_DB.EMPLOYEES emp, OLD_DB.DEPARTMENTS dept, OLD_DB.JOBS jobs, OBJECTS deptobj, OBJECTS jobobj
+WHERE emp.DEPARTMENT_ID = dept.DEPARTMENT_ID AND deptobj.Name = dept.DEPARTMENT_NAME AND deptobj.OBJECT_TYPE_ID = 4
+      AND emp.JOB_ID = jobs.JOB_ID AND jobobj.Name = jobs.JOB_TITLE AND jobobj.OBJECT_TYPE_ID = 32;
+      
+ INSERT ALL
+ INTO OBJECTS  VALUES (USEQ.NEXTVAL, EMP_ID, 25, MgrName, null)
+ SELECT DISTINCT mgr.FIRST_NAME || ' ' || mgr.LAST_NAME MgrName,
+        empobj.OBJECT_ID EMP_ID
+ FROM OLD_DB.EMPLOYEES mgr, OLD_DB.EMPLOYEES emp, OBJECTS empobj
+ WHERE mgr.EMPLOYEE_ID = emp.MANAGER_ID 
+        AND mgr.FIRST_NAME || ' ' || mgr.LAST_NAME = empobj.NAME
+        AND empobj.OBJECT_TYPE_ID = 24;
+        
+INSERT INTO OBJREFERENCE (ATTR_ID, OBJECT_ID, REFERENCE)
+SELECT 32, empobj.OBJECT_ID EMP_ID,
+        mngobj.OBJECT_ID MGR_ID 
+FROM OLD_DB.EMPLOYEES mgr, OLD_DB.EMPLOYEES emp, OBJECTS empobj, OBJECTS mngobj
+ WHERE mgr.EMPLOYEE_ID = emp.MANAGER_ID 
+        AND emp.FIRST_NAME || ' ' || emp.LAST_NAME = empobj.NAME
+        AND empobj.OBJECT_TYPE_ID = 24/*Emplployees*/
+        AND mngobj.OBJECT_TYPE_ID = 25/*Managers*/
+        AND mgr.FIRST_NAME || ' ' || mgr.LAST_NAME = mngobj.NAME;
+        
+--11. Выполнить запрос, который:
+-- получает фамилию, должность, номер подразделения сотрудников
+-- сотрудники работают в городе Toronto.
+SELECT lnamea.Value LastName, jobobj.Name Job, depobj.Name Dept
+FROM OBJECTS empobj, ATTRIBUTES lnamea, OBJREFERENCE jobr, OBJREFERENCE deptr,
+     OBJECTS jobobj, OBJECTS depobj,  OBJECTS locobj, OBJECTS citobj 
+WHERE empobj.OBJECT_TYPE_ID = 24 /*Emplployees*/
+      AND lnamea.ATTR_ID = 27 /*Last name*/
+      AND lnamea.OBJECT_ID = empobj.OBJECT_ID
+      AND jobr.ATTR_ID = 33 /*Occupy*/
+      AND empobj.OBJECT_ID = jobr.OBJECT_ID
+      AND jobr.REFERENCE = jobobj.OBJECT_ID
+      AND deptr.ATTR_ID = 31/*Work*/
+      AND empobj.OBJECT_ID = deptr.OBJECT_ID
+      AND deptr.REFERENCE = depobj.OBJECT_ID
+      AND depobj.PARENT_ID = locobj.OBJECT_ID
+      AND locobj.PARENT_ID = citobj.OBJECT_ID
+      AND citobj.Name = 'Toronto';
+      
+-- 12. Выполнить запрос, который:
+-- получает номера и фамилии сотрудников;
+-- у сотрудников менеджером является сотрудник по имени John Russell.
+SELECT pha.Value Phone, lnamea.Value LastName
+FROM OBJECTS empobj, ATTRIBUTES lnamea, ATTRIBUTES pha, OBJECTS mgrobj, OBJREFERENCE manr
+WHERE empobj.OBJECT_TYPE_ID = 24 /*Emplployees*/
+      AND lnamea.ATTR_ID = 27 /*Last name*/
+      AND lnamea.OBJECT_ID = empobj.OBJECT_ID
+      AND pha.ATTR_ID = 12 /*Phone*/
+      AND pha.OBJECT_ID = empobj.OBJECT_ID
+      AND mgrobj.OBJECT_TYPE_ID = 25 /*Manager*/
+      AND mgrobj.Name = 'John Russell'
+      AND manr.ATTR_ID = 32
+      AND manr.OBJECT_ID = empobj.OBJECT_ID
+      AND manr.REFERENCE = mgrobj.OBJECT_ID;
+
