@@ -1,4 +1,4 @@
-package JL78.vector.exceptions;
+package jl8.vector.exceptions;
 
 public class IncompatibleVectorSizesException extends  Exception{
     public IncompatibleVectorSizesException() {

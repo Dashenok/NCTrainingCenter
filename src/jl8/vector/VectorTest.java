@@ -1,10 +1,11 @@
-package JL78.vector;
+package jl8.vector;
 
-import JL78.vector.exceptions.IncompatibleVectorSizesException;
-import JL78.vector.exceptions.VectorIndexOutOfBoundsException;
-import JL78.vector.impl.LinkedVector;
-import org.junit.*;
-
+import jl8.vector.exceptions.IncompatibleVectorSizesException;
+import jl8.vector.exceptions.VectorIndexOutOfBoundsException;
+import jl8.vector.impl.LinkedVector;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 

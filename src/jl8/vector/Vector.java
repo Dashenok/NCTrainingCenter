@@ -1,6 +1,6 @@
-package JL78.vector;
+package jl8.vector;
 
-import JL78.vector.exceptions.IncompatibleVectorSizesException;
+import jl8.vector.exceptions.IncompatibleVectorSizesException;
 
 public interface Vector {
 

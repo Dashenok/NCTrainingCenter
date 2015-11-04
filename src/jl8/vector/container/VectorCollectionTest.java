@@ -1,6 +1,6 @@
-package JL78.vector.container;
+package jl8.vector.container;
 
-import JL78.vector.impl.ArrayVector;
+import jl8.vector.impl.ArrayVector;
 import junit.framework.TestCase;
 
 

@@ -1,7 +1,7 @@
-package JL78.vector.container;
+package jl8.vector.container;
 
 
-import JL78.vector.Vector;
+import jl8.vector.Vector;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -141,9 +141,10 @@ public class VectorCollection implements Collection {
     @Override
     public boolean containsAll(Collection c) {
         int countOfContains = 0;
-        for (Object o : c) {
+        Vector[] newVectorArray = (Vector[]) c.toArray();
+        for (int j = 0; j < newVectorArray.length; j++) {
                 for (int i = 0; i < arr.length; i++) {
-                    if (o == arr[i]){
+                    if (newVectorArray[j] == arr[i]){
                         countOfContains++;
                         break;
                     }

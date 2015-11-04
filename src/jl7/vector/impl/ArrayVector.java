@@ -1,9 +1,9 @@
-package JL78.vector.impl;
+package jl7.vector.impl;
 
-import JL78.vector.Vector;
-import JL78.vector.Vectors;
-import JL78.vector.exceptions.IncompatibleVectorSizesException;
-import JL78.vector.exceptions.VectorIndexOutOfBoundsException;
+import jl7.vector.Vector;
+import jl7.vector.Vectors;
+import jl7.vector.exceptions.IncompatibleVectorSizesException;
+import jl7.vector.exceptions.VectorIndexOutOfBoundsException;
 
 import java.io.Serializable;
 

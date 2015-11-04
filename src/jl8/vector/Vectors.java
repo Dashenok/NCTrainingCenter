@@ -1,7 +1,7 @@
-package JL78.vector;
+package jl8.vector;
 
 
-import JL78.vector.impl.ArrayVector;
+import jl8.vector.impl.ArrayVector;
 
 import java.io.*;
 

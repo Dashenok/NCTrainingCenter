@@ -1,9 +1,7 @@
-package JL78.vector.container;
+package jl8.vector.container;
 
-import JL78.vector.Vector;
-import JL78.vector.exceptions.VectorIndexOutOfBoundsException;
+import jl8.vector.Vector;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
