@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 
-public class VectorCollection implements Collection {
+public class VectorCollection<T extends  Vector> implements Collection<T> {
 
     protected Vector[] arr;
 
@@ -45,6 +45,7 @@ public class VectorCollection implements Collection {
         return newArr;
     }
 
+
     @Override
     public Object[] toArray(Object[] a) {
         if (a.length >= size()){
@@ -60,15 +61,14 @@ public class VectorCollection implements Collection {
         return a;
     }
 
-
     @Override
-    public boolean add(Object o){
-        if ((o instanceof Vector) || o == null){
+    public boolean add(T t){
+        if ((t instanceof Vector) || t == null){
             Vector[] tempArray = new Vector[arr.length];
             System.arraycopy(arr, 0, tempArray, 0, arr.length);
             arr = new Vector[arr.length + 1];
             System.arraycopy(tempArray, 0, arr, 0, arr.length-1);
-            arr[arr.length-1] = (Vector)o;
+            arr[arr.length-1] = (Vector)t;
             return true;
         } else {
             throw new ClassCastException();

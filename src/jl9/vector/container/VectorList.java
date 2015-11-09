@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.ListIterator;
 
 
-public class VectorList extends VectorCollection implements List {
+public class VectorList<T extends Vector> extends VectorCollection<T> implements List<T> {
 
     public VectorList(Vector[] arr) {
         super(arr);
     }
+
 
     @Override
     public boolean addAll(int index, Collection c) throws ClassCastException,
@@ -37,15 +38,16 @@ public class VectorList extends VectorCollection implements List {
     }
 
     @Override
-    public Object get(int index)  throws IndexOutOfBoundsException{
+    public T get(int index)  throws IndexOutOfBoundsException{
         if (index < 0 || index > arr.length-1){
             throw new IndexOutOfBoundsException();
         }
-        return  arr[index];
+        return (T) arr[index];
     }
 
+
     @Override
-    public Object set(int index, Object element) throws IndexOutOfBoundsException, ClassCastException,
+    public T set(int index, T element) throws IndexOutOfBoundsException, ClassCastException,
                                                         NullPointerException{
         if (index < 0 || index > arr.length-1){
             throw new IndexOutOfBoundsException();
@@ -55,11 +57,11 @@ public class VectorList extends VectorCollection implements List {
         }
         Object prevElement = arr[index];
         arr[index] = (Vector)element;
-        return prevElement;
+        return (T) prevElement;
     }
 
     @Override
-    public void add(int index, Object element) throws ClassCastException, NullPointerException,
+    public void add(int index, T element) throws ClassCastException, NullPointerException,
                                                       IndexOutOfBoundsException{
         if (element instanceof Vector) {
             if (index < 0 || index > arr.length - 1) {
@@ -84,11 +86,11 @@ public class VectorList extends VectorCollection implements List {
     }
 
     @Override
-    public Object remove(int index) throws IndexOutOfBoundsException{
+    public T remove(int index) throws IndexOutOfBoundsException{
         if (index < 0 || index > arr.length - 1) {
             throw new IndexOutOfBoundsException();
         }
-        Object deletedObject = arr[index];
+        T deletedObject = (T) arr[index];
         int l = arr.length;
         Vector[] tempArray = new Vector[l - 1];
         System.arraycopy(arr, 0, tempArray, 0, index);

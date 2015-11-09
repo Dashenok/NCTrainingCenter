@@ -4,7 +4,7 @@ import jl9.vector.Vector;
 
 import java.util.Set;
 
-public class VectorSet extends VectorCollection implements Set {
+public class VectorSet<T extends Vector> extends VectorCollection<T> implements Set<T> {
 
 
     public VectorSet(Vector[] inArr) {
@@ -12,7 +12,7 @@ public class VectorSet extends VectorCollection implements Set {
     }
 
     @Override
-    public boolean add(Object o) {
+    public boolean add(T o) {
         if (contains(o)){
             return false;
         }
