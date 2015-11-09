@@ -88,17 +88,11 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean addAll(Collection c) {
-        int countOfContains = 0;
         Vector[] newVectorArray = (Vector[])c.toArray();
         Vector[] tempArr = arr.clone();
         arr = new Vector[arr.length + newVectorArray.length];
-        for (int i = 0; i < newVectorArray.length; i++){
-                arr[i + arr.length] = newVectorArray[i];
-                countOfContains++;
-        }
-        if (countOfContains == 0){
-            return false;
-        }
+        System.arraycopy(tempArr, 0, arr, 0, tempArr.length);
+        System.arraycopy(newVectorArray, 0, arr, tempArr.length, newVectorArray.length);
         return true;
     }
 

@@ -26,8 +26,11 @@ public class VectorList extends VectorCollection implements List {
         if (index < 0 || index > arr.length-1){
             throw new IndexOutOfBoundsException();
         }
-        for (int i = index, j = 0; i < c.size(); i++, j++) {
-            add(i, newVectorArray[j]);
+        Vector[] tempArr = arr.clone();
+        arr = new Vector[arr.length + newVectorArray.length];
+        System.arraycopy(tempArr, 0, arr, 0, tempArr.length);
+        for (int i = 0; i < newVectorArray.length; i++){
+            arr[i + tempArr.length] = (Vector)newVectorArray[i];
         }
         return true;
 
@@ -154,15 +157,5 @@ public class VectorList extends VectorCollection implements List {
         }
         VectorList newVectorList = new VectorList(newVectorArr);
         return newVectorList;
-    }
-
-    private void fillFromMass(Vector[] tempArray) {
-        int newMassLength = tempArray.length;
-        if (arr.length != newMassLength){
-            arr = new Vector[arr.length];
-        }
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = tempArray[i];
-        }
     }
 }
