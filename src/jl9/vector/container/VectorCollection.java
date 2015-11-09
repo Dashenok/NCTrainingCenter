@@ -1,7 +1,7 @@
-package jl7.vector.container;
+package jl9.vector.container;
 
 
-import jl7.vector.Vector;
+import jl9.vector.Vector;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -144,13 +144,14 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean containsAll(Collection c) {
+        int countOfContains = 0;
         Vector[] newVectorArray = (Vector[]) c.toArray();
         for (int j = 0; j < newVectorArray.length; j++) {
-            for (int i = 0; i < arr.length; i++) {
-                if (!newVectorArray[j].equals(arr[i])){
-                    return false;
+                for (int i = 0; i < arr.length; i++) {
+                    if (!newVectorArray[j].equals(arr[i])){
+                        return false;
+                    }
                 }
-            }
         }
 
 

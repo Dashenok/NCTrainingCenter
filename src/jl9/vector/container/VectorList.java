@@ -1,6 +1,6 @@
-package jl7.vector.container;
+package jl9.vector.container;
 
-import jl7.vector.Vector;
+import jl9.vector.Vector;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,7 +15,7 @@ public class VectorList extends VectorCollection implements List {
 
     @Override
     public boolean addAll(int index, Collection c) throws ClassCastException,
-            IndexOutOfBoundsException, IllegalArgumentException{
+                                                          IndexOutOfBoundsException, IllegalArgumentException{
 
         Object[] newVectorArray = (Object[]) c.toArray();
         for (int i = 0; i < c.size(); i++) {
@@ -46,7 +46,7 @@ public class VectorList extends VectorCollection implements List {
 
     @Override
     public Object set(int index, Object element) throws IndexOutOfBoundsException, ClassCastException,
-            NullPointerException{
+                                                        NullPointerException{
         if (index < 0 || index > arr.length-1){
             throw new IndexOutOfBoundsException();
         }
@@ -60,7 +60,7 @@ public class VectorList extends VectorCollection implements List {
 
     @Override
     public void add(int index, Object element) throws ClassCastException, NullPointerException,
-            IndexOutOfBoundsException{
+                                                      IndexOutOfBoundsException{
         if (element instanceof Vector) {
             if (index < 0 || index > arr.length - 1) {
                 throw new IndexOutOfBoundsException();
