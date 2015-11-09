@@ -135,7 +135,7 @@ public class VectorCollection implements Collection {
                 remove(arr[i]);
                 countOfContains++;
             }else{
-                i++;//Ask
+                i++;
             }
         }
         if (countOfContains == 0){return false;}
@@ -144,11 +144,10 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean containsAll(Collection c) {
-        int countOfContains = 0;
         Vector[] newVectorArray = (Vector[]) c.toArray();
         for (int j = 0; j < newVectorArray.length; j++) {
                 for (int i = 0; i < arr.length; i++) {
-                    if (!newVectorArray[j].equals(arr[i])){
+                    if (!(newVectorArray[j] == null ? arr[i] == null : arr[i].equals(newVectorArray[j]))){
                         return false;
                     }
                 }
