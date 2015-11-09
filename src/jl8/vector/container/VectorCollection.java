@@ -47,7 +47,17 @@ public class VectorCollection implements Collection {
 
     @Override
     public Object[] toArray(Object[] a) {
-        return new Object[0];
+        if (a.length >= size()){
+            System.arraycopy(arr,0,a,0,arr.length);
+            int diff = a.length - size();
+            for (int i = 0; i < diff; i++) {
+                a[arr.length+i] = null;
+            }
+        } else {
+            a =  new Vector[arr.length];
+            System.arraycopy(arr, 0, a, 0,  arr.length);
+        }
+        return a;
     }
 
 
