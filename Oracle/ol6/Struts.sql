@@ -311,11 +311,9 @@ ORDER BY level, Dept.Department_ID;
 -- формат вывода: номер дн€ в мес€це (две цифры), полное название мес€ца,
 -- по каждому мес€цу количество возвращаемых строк должно точно соответствовать
 -- количеству дней в мес€це.
-WITH mdays(dd) AS (SELECT TO_DATE(LAST_DAY(ADD_MONTHS(TRUNC(sysdate, 'month'), -1)),'dd-mon-yyyy') dd
-FROM DUAL 
-UNION ALL
-SELECT dd
-FROM mdays
-WHERE dd <= (SELECT LAST_DAY(ADD_MONTHS(TRUNC(sysdate, 'month'), 1)) cd FROM dual)
-)
-SELECT TO_DATE(dd, 'dd') d, TO_DATE(dd, 'month') FROM mdays;
+SELECT TO_CHAR(ADD_MONTHS(TRUNC(sysdate, 'month'), -1)+rownum-1
+             , 'DD Month'
+             , 'NLS_DATE_LANGUAGE=AMERICAN') AS d
+FROM dual
+CONNECT BY ROWNUM <= TO_CHAR(LAST_DAY(ADD_MONTHS(TRUNC(sysdate, 'month'), 1)) - ADD_MONTHS(TRUNC(sysdate, 'month'), -1)+1)
+;
