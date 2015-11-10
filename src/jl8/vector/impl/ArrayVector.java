@@ -45,6 +45,8 @@ public class ArrayVector implements Vector, Cloneable, Serializable {
             size = newMassLength;
             mass = new double[size];
         }
+
+        //System.arraycopy()
         for (int i = 0; i < size; i++) {
             mass[i] = newMass[i];
         }
@@ -169,15 +171,36 @@ public class ArrayVector implements Vector, Cloneable, Serializable {
         return stringBuilder.toString().trim();
     }
 
-    public boolean equals(Object obj){
-        if (obj instanceof Vector){
-            if (((Vector) obj).getSize() != size){
-                return false;
-            }
-            for (int i = 0; i < size; i++) {
-                return ((Vector) obj).getElement(i) == getElement(i);
-            }
+    public boolean equals(Object obj)
+    {
+        //todo предлагаю переписать equals
+        if(!(o instanceof Vector))
+            return false;
+
+        Vector vector = (Vector)o;
+        if (vector.getSize() != size)
+            return false;
+
+        //todo зачем тут цыкл ?
+        //todo тут логика странная , не совсем понятно, что должно получится , надо переделать
+        for (int i = 0; i < size; i++)
+        {
+            return ((Vector) obj).getElement(i) == getElement(i);
         }
+
+//        if (obj instanceof Vector)
+//        {
+//            if (((Vector) obj).getSize() != size)
+//            {
+//                return false;
+//            }
+//
+//            //todo зачем тут цыкл ?
+//            for (int i = 0; i < size; i++)
+//            {
+//                return ((Vector) obj).getElement(i) == getElement(i);
+//            }
+//        }
         return  false;
     }
 

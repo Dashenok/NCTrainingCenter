@@ -27,6 +27,7 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean contains(Object o) {
+        //todo зачем тут for ? цикл на одну итерацию
         for (int i = 0; i < arr.length; i++) {
             return o == null ? arr[i] == null : arr[i].equals(o);
         }
@@ -47,17 +48,24 @@ public class VectorCollection implements Collection {
 
     @Override
     public Object[] toArray(Object[] a) {
-        if (a.length >= size()){
-            System.arraycopy(arr,0,a,0,arr.length);
-        } else {
-           toArray();
-        }
-        return a;
+        return new Object[0];
     }
 
 
     @Override
     public boolean add(Object o){
+
+
+        //todo проверки должны происходить так , это очевидно, не нужно читать логику метода
+        if(!(o instanceof Vector))
+            return;
+
+        if (o == null)
+            return;
+
+
+        //todo странно o == null
+        // а затем arr[arr.length-1] = (Vector)o;
         if ((o instanceof Vector) || o == null){
             Vector[] tempArray = new Vector[arr.length];
             System.arraycopy(arr, 0, tempArray, 0, arr.length);
@@ -72,6 +80,7 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean remove(Object o) {
+        //todo тоже, что и в add
         if ((o instanceof Vector) || o == null){
             for (int i = 0; i < arr.length; i++) {
                 if (o == null ? arr[i] == null : arr[i].equals(o)) {
@@ -93,11 +102,20 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean addAll(Collection c) {
+        //todo а может быть такое , что с будет null ?
+        int countOfContains = 0;
         Vector[] newVectorArray = (Vector[])c.toArray();
         Vector[] tempArr = arr.clone();
         arr = new Vector[arr.length + newVectorArray.length];
-        System.arraycopy(tempArr, 0, arr, 0, tempArr.length);
-        System.arraycopy(newVectorArray, 0, arr, tempArr.length, newVectorArray.length);
+        for (int i = 0; i < newVectorArray.length; i++){
+                arr[i + arr.length] = newVectorArray[i];
+                countOfContains++;
+        }
+
+        //todo это можно заменить return countOfContains != 0;
+        if (countOfContains == 0){
+            return false;
+        }
         return true;
     }
 
@@ -117,6 +135,8 @@ public class VectorCollection implements Collection {
                 i++;
             }
         }
+
+
         if (countOfContains == 0){return false;}
         return true;
 
@@ -130,7 +150,7 @@ public class VectorCollection implements Collection {
                 remove(arr[i]);
                 countOfContains++;
             }else{
-                i++;
+                i++;//Ask
             }
         }
         if (countOfContains == 0){return false;}
@@ -139,10 +159,12 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean containsAll(Collection c) {
+        //todo countOfContains - зачем тут переменая ?
+        int countOfContains = 0;
         Vector[] newVectorArray = (Vector[]) c.toArray();
         for (int j = 0; j < newVectorArray.length; j++) {
                 for (int i = 0; i < arr.length; i++) {
-                    if (!(newVectorArray[j] == null ? arr[i] == null : arr[i].equals(newVectorArray[j]))){
+                    if (!newVectorArray[j].equals(arr[i])){
                         return false;
                     }
                 }
