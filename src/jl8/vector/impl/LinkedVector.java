@@ -180,6 +180,8 @@ public class LinkedVector implements Vector, Cloneable, Serializable{
             }
             Nod currentElement = head;
             Nod currentObjectElement = ((LinkedVector) obj).head;
+
+            //todo for - надо убрать
             for (int i = 0; i < size; i++) {
 
                 if (currentElement.element != currentObjectElement.element){
