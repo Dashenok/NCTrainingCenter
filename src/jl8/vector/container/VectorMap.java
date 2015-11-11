@@ -20,6 +20,7 @@ public class VectorMap implements Map {
 
     @Override
     public boolean containsKey(Object key) {
+        //todo нет смысла такого цикла - их полно , надо убрать все
         for (int i = 0; i < keyArr.length; i++) {
             return key == null ? keyArr[i] == null: keyArr[i].equals(key);
         }

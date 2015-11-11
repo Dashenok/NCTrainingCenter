@@ -27,6 +27,7 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean contains(Object o) {
+        //todo зачем тут for ? цикл на одну итерацию
         for (int i = 0; i < arr.length; i++) {
             return o == null ? arr[i] == null : arr[i].equals(o);
         }
@@ -58,6 +59,9 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean add(Object o){
+        //todo проверки должны происходить так , это очевидно, не нужно читать логику метода
+        //todo странно o == null
+        // а затем arr[arr.length-1] = (Vector)o;
         if ((o instanceof Vector) || o == null){
             Vector[] tempArray = new Vector[arr.length];
             System.arraycopy(arr, 0, tempArray, 0, arr.length);
@@ -72,6 +76,7 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean remove(Object o) {
+        //todo тоже, что и в add
         if ((o instanceof Vector) || o == null){
             for (int i = 0; i < arr.length; i++) {
                 if (o == null ? arr[i] == null : arr[i].equals(o)) {
@@ -93,6 +98,7 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean addAll(Collection c) {
+        //todo а может быть такое , что с будет null ?
         Vector[] newVectorArray = (Vector[])c.toArray();
         Vector[] tempArr = arr.clone();
         arr = new Vector[arr.length + newVectorArray.length];
@@ -117,6 +123,7 @@ public class VectorCollection implements Collection {
                 i++;
             }
         }
+        //todo это можно заменить return countOfContains != 0;
         if (countOfContains == 0){return false;}
         return true;
 
@@ -139,6 +146,7 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean containsAll(Collection c) {
+        //todo countOfContains - зачем тут переменая ?
         Vector[] newVectorArray = (Vector[]) c.toArray();
         for (int j = 0; j < newVectorArray.length; j++) {
                 for (int i = 0; i < arr.length; i++) {

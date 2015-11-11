@@ -173,6 +173,7 @@ public class LinkedVector implements Vector, Cloneable, Serializable{
     }
 
     public boolean equals(Object obj){
+        //todo for - надо убрать
         if (obj instanceof Vector){
             if (((Vector) obj).getSize() != size){
                 return false;
