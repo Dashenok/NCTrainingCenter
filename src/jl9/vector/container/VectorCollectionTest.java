@@ -80,12 +80,12 @@ public class VectorCollectionTest extends TestCase{
         fillArrays();
         ArrayVector[] testVectorArray = {vector1, vector2};
         VectorCollection vectorCollection = new VectorCollection(testVectorArray);
-        int fakeVector = 10;
+        /*int fakeVector = {10};
         try {
             vectorCollection.add(fakeVector);
         } catch (ClassCastException e){
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void testRemove() throws Exception {

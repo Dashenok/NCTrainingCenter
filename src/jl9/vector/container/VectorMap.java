@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class VectorMap implements Map {
+public class VectorMap<K extends  Object, V extends  Vector> implements Map<K, V> {
     private Object[] keyArr;
     private Vector[] valueArr;
 
@@ -42,11 +42,11 @@ public class VectorMap implements Map {
     }
 
     @Override
-    public Object get(Object key) {
+    public V get(Object key) {
        if (containsKey(key)){
            for (int i = 0; i < keyArr.length; i++) {
                if (keyArr[i].equals(key)){
-                   return valueArr[i];
+                   return (V)valueArr[i];
                }
            }
        }
@@ -54,13 +54,13 @@ public class VectorMap implements Map {
     }
 
     @Override
-    public Object put(Object key, Object value) {
+    public V put(K key, V value) {
         if ((containsKey(key))) {
             for (int i = 0; i < keyArr.length; i++)
                 if (keyArr[i].equals(key)) {
                     Vector prevVector = valueArr[i];
                     valueArr[i] = (Vector)value;
-                    return prevVector;
+                    return (V)prevVector;
                 }
         } else {
             Object[] tempKeyArr = keyArr.clone();
@@ -76,7 +76,7 @@ public class VectorMap implements Map {
     }
 
     @Override
-    public Object remove(Object key) {
+    public V remove(Object key) {
         if ((containsKey(key))) {
             for (int i = 0; i < keyArr.length; i++)
                 if (keyArr[i].equals(key)) {
@@ -100,7 +100,7 @@ public class VectorMap implements Map {
                     valueArr = new Vector[valueArr.length - 1];
                     System.arraycopy(tempValueArr, 0, valueArr, 0, valueArr.length);
 
-                    return prevVector;
+                    return (V)prevVector;
                 }
         }
         return null;
@@ -110,7 +110,7 @@ public class VectorMap implements Map {
     public void putAll(Map m) {
         Object[] keyObjArr = m.keySet().toArray();
         for (int i = 0; i < keyObjArr.length; i++) {
-            put(keyObjArr[i], get(keyObjArr[i]));
+            put((K)keyObjArr[i], get(keyObjArr[i]));
         }
 
     }
@@ -123,7 +123,7 @@ public class VectorMap implements Map {
 
     @Override
     public Set keySet() {
-        Set keySet = new HashSet();
+        Set<Object> keySet = new HashSet<Object>();
         for (int i = 0; i < size(); i++) {
             keySet.add(keyArr[i]);
         }
@@ -132,15 +132,15 @@ public class VectorMap implements Map {
 
     @Override
     public Collection values() {
-        return new VectorCollection(valueArr);
+        return new VectorCollection<Vector>(valueArr);
     }
 
     @Override
-    public Set<Entry> entrySet() {
-        Set set = new HashSet();
+    public Set<Entry<K, V>> entrySet() {
+        Set<Entry<K, V>> set = new HashSet<Entry<K, V>>();
         for (int i = 0; i < size(); i++) {
-            Entry entry = new EntrySet(keyArr[i], (Vector)get(keyArr[i]));
-            set.add(entry);
+            Entry<Object, Vector> entry = new EntrySet(keyArr[i], get(keyArr[i]));
+            set.add((Entry<K, V>) entry);
 
         }
 
