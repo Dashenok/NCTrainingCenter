@@ -171,17 +171,21 @@ public class ArrayVector implements Vector, Cloneable, Serializable {
 
     public boolean equals(Object obj){
         //todo предлагаю переписать equals
-        if (obj instanceof Vector){
-            if (((Vector) obj).getSize() != size){
+        if (!(obj instanceof Vector)){
+            return false;
+        }
+        if (((Vector) obj).getSize() != size){
+            return false;
+        }
+        //todo зачем тут цыкл ?
+        //todo тут логика странная , не совсем понятно, что должно получится , надо переделать
+        for (int i = 0; i < size; i++) {
+            if (!(((Vector) obj).getElement(i) == getElement(i))) {
                 return false;
             }
-            //todo зачем тут цыкл ?
-            //todo тут логика странная , не совсем понятно, что должно получится , надо переделать
-            for (int i = 0; i < size; i++) {
-                return ((Vector) obj).getElement(i) == getElement(i);
-            }
         }
-        return  false;
+        return true;
+
     }
 
     public Object clone() throws CloneNotSupportedException{

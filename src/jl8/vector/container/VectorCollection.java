@@ -27,9 +27,10 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean contains(Object o) {
-        //todo зачем тут for ? цикл на одну итерацию
         for (int i = 0; i < arr.length; i++) {
-            return o == null ? arr[i] == null : arr[i].equals(o);
+            if(o == null ? arr[i] == null : arr[i].equals(o)){
+                return true;
+            }
         }
         return false;
     }
@@ -59,39 +60,38 @@ public class VectorCollection implements Collection {
 
     @Override
     public boolean add(Object o){
-        //todo проверки должны происходить так , это очевидно, не нужно читать логику метода
+        if (!(o instanceof Vector || o == null)){
+            throw new ClassCastException();
+        }
+
         //todo странно o == null
         // а затем arr[arr.length-1] = (Vector)o;
-        if ((o instanceof Vector) || o == null){
+        //
             Vector[] tempArray = new Vector[arr.length];
             System.arraycopy(arr, 0, tempArray, 0, arr.length);
             arr = new Vector[arr.length + 1];
             System.arraycopy(tempArray, 0, arr, 0, arr.length-1);
             arr[arr.length-1] = (Vector)o;
             return true;
-        } else {
-            throw new ClassCastException();
-        }
+
     }
 
     @Override
     public boolean remove(Object o) {
-        //todo тоже, что и в add
-        if ((o instanceof Vector) || o == null){
-            for (int i = 0; i < arr.length; i++) {
-                if (o == null ? arr[i] == null : arr[i].equals(o)) {
-                    Vector[] tempArray = new Vector[arr.length - 1];
-                    System.arraycopy(arr, 0, tempArray, 0, i);
-                    if (i != arr.length - 1) {
-                        System.arraycopy(arr, i + 1, tempArray, i, arr.length - 1 - i);
-                    }
-                    arr = new Vector[arr.length - 1];
-                    System.arraycopy(tempArray, 0, arr, 0 , arr.length);
-                    return true;
-                }
-            }
-        } else {
+        if (!(o instanceof Vector || o == null)){
             throw new ClassCastException();
+        }
+        for (int i = 0; i < arr.length; i++) {
+            if (o == null ? arr[i] == null : arr[i].equals(o)) {
+                Vector[] tempArray = new Vector[arr.length - 1];
+                System.arraycopy(arr, 0, tempArray, 0, i);
+                if (i != arr.length - 1) {
+                    System.arraycopy(arr, i + 1, tempArray, i, arr.length - 1 - i);
+                }
+                arr = new Vector[arr.length - 1];
+                System.arraycopy(tempArray, 0, arr, 0 , arr.length);
+                return true;
+            }
         }
         return false;
     }
@@ -99,6 +99,7 @@ public class VectorCollection implements Collection {
     @Override
     public boolean addAll(Collection c) {
         //todo а может быть такое , что с будет null ?
+        // может быть null
         Vector[] newVectorArray = (Vector[])c.toArray();
         Vector[] tempArr = arr.clone();
         arr = new Vector[arr.length + newVectorArray.length];
@@ -124,8 +125,7 @@ public class VectorCollection implements Collection {
             }
         }
         //todo это можно заменить return countOfContains != 0;
-        if (countOfContains == 0){return false;}
-        return true;
+        return countOfContains != 0;
 
     }
 
@@ -155,8 +155,6 @@ public class VectorCollection implements Collection {
                     }
                 }
         }
-
-
         return true;
     }
 

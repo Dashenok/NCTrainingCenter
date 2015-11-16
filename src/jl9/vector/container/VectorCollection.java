@@ -28,7 +28,9 @@ public class VectorCollection<T extends  Vector> implements Collection<T> {
     @Override
     public boolean contains(Object o) {
         for (int i = 0; i < arr.length; i++) {
-            return o == null ? arr[i] == null : arr[i].equals(o);
+            if(o == null ? arr[i] == null : arr[i].equals(o)){
+                return true;
+            }
         }
         return false;
     }
@@ -47,7 +49,7 @@ public class VectorCollection<T extends  Vector> implements Collection<T> {
 
 
     @Override
-    public Object[] toArray(Object[] a) {
+    public <T> T[] toArray(T[] a) {
         if (a.length >= size()){
             System.arraycopy(arr,0,a,0,arr.length);
             int diff = a.length - size();
@@ -55,43 +57,42 @@ public class VectorCollection<T extends  Vector> implements Collection<T> {
                 a[arr.length+i] = null;
             }
         } else {
-            a =  new Vector[arr.length];
+            a = (T[]) new Vector[arr.length];
             System.arraycopy(arr, 0, a, 0,  arr.length);
         }
-        return a;
+        return (T[])a;
     }
 
     @Override
     public boolean add(T t){
-        if ((t instanceof Vector) || t == null){
+        if (!(t instanceof Vector || t == null)){
+            throw new ClassCastException();
+        }
             Vector[] tempArray = new Vector[arr.length];
             System.arraycopy(arr, 0, tempArray, 0, arr.length);
             arr = new Vector[arr.length + 1];
             System.arraycopy(tempArray, 0, arr, 0, arr.length-1);
             arr[arr.length-1] = (Vector)t;
             return true;
-        } else {
-            throw new ClassCastException();
-        }
+
     }
 
     @Override
     public boolean remove(Object o) {
-        if ((o instanceof Vector) || o == null){
-            for (int i = 0; i < arr.length; i++) {
-                if (o == null ? arr[i] == null : arr[i].equals(o)) {
-                    Vector[] tempArray = new Vector[arr.length - 1];
-                    System.arraycopy(arr, 0, tempArray, 0, i);
-                    if (i != arr.length - 1) {
-                        System.arraycopy(arr, i + 1, tempArray, i, arr.length - 1 - i);
-                    }
-                    arr = new Vector[arr.length - 1];
-                    System.arraycopy(tempArray, 0, arr, 0 , arr.length);
-                    return true;
-                }
-            }
-        } else {
+        if (!(o instanceof Vector || o == null)){
             throw new ClassCastException();
+        }
+        for (int i = 0; i < arr.length; i++) {
+            if (o == null ? arr[i] == null : arr[i].equals(o)) {
+                Vector[] tempArray = new Vector[arr.length - 1];
+                System.arraycopy(arr, 0, tempArray, 0, i);
+                if (i != arr.length - 1) {
+                    System.arraycopy(arr, i + 1, tempArray, i, arr.length - 1 - i);
+                }
+                arr = new Vector[arr.length - 1];
+                System.arraycopy(tempArray, 0, arr, 0 , arr.length);
+                return true;
+            }
         }
         return false;
     }
@@ -122,8 +123,7 @@ public class VectorCollection<T extends  Vector> implements Collection<T> {
                 i++;
             }
         }
-        if (countOfContains == 0){return false;}
-        return true;
+        return countOfContains != 0;
 
     }
 
@@ -144,7 +144,6 @@ public class VectorCollection<T extends  Vector> implements Collection<T> {
 
     @Override
     public boolean containsAll(Collection c) {
-        int countOfContains = 0;
         Vector[] newVectorArray = (Vector[]) c.toArray();
         for (int j = 0; j < newVectorArray.length; j++) {
                 for (int i = 0; i < arr.length; i++) {

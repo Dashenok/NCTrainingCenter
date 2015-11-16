@@ -3,6 +3,7 @@ package jl9.vector.container;
 import jl9.vector.Vector;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,7 +24,9 @@ public class VectorMap implements Map {
     @Override
     public boolean containsKey(Object key) {
         for (int i = 0; i < keyArr.length; i++) {
-            return key == null ? keyArr[i] == null: keyArr[i].equals(key);
+            if (key == null ? keyArr[i] == null: keyArr[i].equals(key)) {
+                return true;
+            }
         }
         return false;
     }
@@ -31,7 +34,9 @@ public class VectorMap implements Map {
     @Override
     public boolean containsValue(Object value) {
         for (int i = 0; i < valueArr.length; i++) {
-            return value == null ? valueArr[i] == null: valueArr[i].equals(value);
+            if (value == null ? valueArr[i] == null: valueArr[i].equals(value)) {
+                return true;
+            }
         }
         return false;
     }
@@ -103,9 +108,11 @@ public class VectorMap implements Map {
 
     @Override
     public void putAll(Map m) {
-        for (int i = 0; i < m.size(); i++) {
-            //put()
+        Object[] keyObjArr = m.keySet().toArray();
+        for (int i = 0; i < keyObjArr.length; i++) {
+            put(keyObjArr[i], get(keyObjArr[i]));
         }
+
     }
 
     @Override
@@ -116,16 +123,53 @@ public class VectorMap implements Map {
 
     @Override
     public Set keySet() {
-        return null;
+        Set keySet = new HashSet();
+        for (int i = 0; i < size(); i++) {
+            keySet.add(keyArr[i]);
+        }
+        return keySet;
     }
 
     @Override
     public Collection values() {
-        return null;
+        return new VectorCollection(valueArr);
     }
 
     @Override
     public Set<Entry> entrySet() {
-        return null;
+        Set set = new HashSet();
+        for (int i = 0; i < size(); i++) {
+            Entry entry = new EntrySet(keyArr[i], (Vector)get(keyArr[i]));
+            set.add(entry);
+
+        }
+
+        return set;
+    }
+
+    final class EntrySet implements Map.Entry<Object, Vector> {
+        private Object key;
+        private Vector value;
+        public EntrySet(Object key, Vector value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public Object getKey() {
+            return key;
+        }
+
+        @Override
+        public Vector getValue() {
+            return value;
+        }
+
+        @Override
+        public Vector setValue(Vector value) {
+            Vector oldValue = this.value;
+            this.value = value;
+            return oldValue;
+        }
     }
 }
