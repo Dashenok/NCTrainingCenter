@@ -72,7 +72,7 @@ public class VectorCollection<T extends  Vector> implements Collection<T> {
             System.arraycopy(arr, 0, tempArray, 0, arr.length);
             arr = new Vector[arr.length + 1];
             System.arraycopy(tempArray, 0, arr, 0, arr.length-1);
-            arr[arr.length-1] = (Vector)t;
+            arr[arr.length-1] = t;
             return true;
 
     }

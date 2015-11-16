@@ -59,7 +59,7 @@ public class VectorMap<K extends  Object, V extends  Vector> implements Map<K, V
             for (int i = 0; i < keyArr.length; i++)
                 if (keyArr[i].equals(key)) {
                     Vector prevVector = valueArr[i];
-                    valueArr[i] = (Vector)value;
+                    valueArr[i] = value;
                     return (V)prevVector;
                 }
         } else {
@@ -70,7 +70,7 @@ public class VectorMap<K extends  Object, V extends  Vector> implements Map<K, V
             System.arraycopy(tempKeyArr, 0, keyArr, 0, tempKeyArr.length);
             System.arraycopy(tempValueArr, 0, valueArr, 0, tempValueArr.length);
             keyArr[keyArr.length-1] = key;
-            valueArr[valueArr.length - 1] = (Vector)value;
+            valueArr[valueArr.length - 1] = value;
         }
         return null;
     }
