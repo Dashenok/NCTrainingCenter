@@ -1,4 +1,4 @@
-package JL56.vector.exceptions;
+package jl5.vector.exceptions;
 public class VectorIndexOutOfBoundsException extends IndexOutOfBoundsException{
     public VectorIndexOutOfBoundsException() {
         super("Vector index is out of bounds");

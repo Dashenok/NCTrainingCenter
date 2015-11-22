@@ -1,8 +1,8 @@
-package JL56.vector.exceptions;
+package jl5.vector.exceptions;
 
 public class IncompatibleVectorSizesException extends  Exception{
     public IncompatibleVectorSizesException() {
-        super("Incompatible JL56.vector sizes");
+        super("Incompatible vector sizes");
     }
 
     public IncompatibleVectorSizesException(String message) {

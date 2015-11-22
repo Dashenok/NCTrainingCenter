@@ -1,5 +1,5 @@
-package JL56.vector;
-import JL56.vector.exceptions.*;
+package jl5.vector;
+import jl5.vector.exceptions.*;
 
 public interface Vector {
 

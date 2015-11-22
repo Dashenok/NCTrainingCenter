@@ -237,7 +237,7 @@ public class VectorTest {
 
     @Test(expected = IncompatibleVectorSizesException.class)
     public void testSumException1() throws IncompatibleVectorSizesException {
-        System.out.println("sumException (JL56.vector sizes > new JL56.vector sizes)");
+        System.out.println("sumException (vector sizes > new vector sizes)");
         // Arrange
         double[] mass = {5.0, -2.9, 0.0, -50000, 9};
         double[] newMass = {1.1, 0.9, -6.4};
@@ -252,7 +252,7 @@ public class VectorTest {
 
     @Test(expected = IncompatibleVectorSizesException.class)
     public void testSumException2() throws IncompatibleVectorSizesException {
-        System.out.println("sumException (JL56.vector sizes < new JL56.vector sizes)");
+        System.out.println("sumException (vector sizes < new vector sizes)");
         // Arrange
         double[] mass = {5.0, -2.9, 0.0, -50000, 9};
         double[] newMass = {1.1, 0.9, -6.4, 100, -9.4, 99};
