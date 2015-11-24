@@ -2,10 +2,7 @@ package jl10.controllers;
 
 import jl10.models.Employee;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +13,24 @@ public class OracleEmployeeDao implements EmployeeDao {
     private final Connection connection;
 
     @Override
-    public Employee create() {
-        return null;
+    public boolean add(Employee employee) throws SQLException{
+        try {
+            String sql = "INSERT INTO EMPLOYEES(EMPLOYEE_ID, LAST_NAME, EMAIL, HIRE_DATE, JOB_ID, MANAGER_ID) " +
+                    "VALUES (EMPLOYEES_SEC.NEXTVAL, "+ employee.getLastName()+", " + employee.getEmail()+", TO_DATE('01.01.2000'), 'IT_PROG', 101)";
+            Statement stm = connection.createStatement();
+
+            stm.executeUpdate(sql);
+
+           // PreparedStatement stm = connection.prepareStatement(sql);
+            //stm.setString(1, employee.getLastName());
+           // stm.setString(2, employee.getEmail());
+            //sql = "COMMIT";
+            //stm = connection.prepareStatement(sql);
+            return true;
+        } catch (SQLException e) {
+
+            return false;
+        }
     }
 
     @Override
@@ -43,10 +56,21 @@ public class OracleEmployeeDao implements EmployeeDao {
     }
 
     @Override
-    public void update(Employee group) { }
+    public void update(Employee employee) { }
 
     @Override
-    public void delete(Employee group) { }
+    public boolean delete(Employee employee) throws SQLException {
+       // try {
+            String sql = "DELETE FROM OLD_DB.EMPLOYEES WHERE EMAIL = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, employee.getEmail());
+            stm.execute();
+            return true;
+       // } catch (SQLException e) {
+        //    return false;
+
+        //}
+    }
 
     @Override
     public List<Employee> getAll() throws SQLException {
@@ -62,6 +86,28 @@ public class OracleEmployeeDao implements EmployeeDao {
             list.add(g);
         }
         return list;
+    }
+
+    @Override
+    public Employee readByArrtibute(String attribute, String attributeValue) throws SQLException {
+        String sql = "SELECT * FROM OLD_DB.EMPLOYEES emp, OLD_DB.DEPARTMENTS dept, OLD_DB.JOBS job " +
+                "WHERE dept.DEPARTMENT_ID = emp.DEPARTMENT_ID AND job.JOB_ID = emp.JOB_ID AND emp."+attribute+" = ?";
+        PreparedStatement stm = connection.prepareStatement(sql);
+
+        stm.setString(1, attributeValue);
+
+        ResultSet rs = stm.executeQuery();
+
+        if(rs.next()) {
+            Employee g = new Employee();
+            g.setId(rs.getInt("EMPLOYEE_ID"));
+            g.setLastName(rs.getString("LAST_NAME"));
+            g.setDepartment(rs.getString("DEPARTMENT_NAME"));
+            g.setJob(rs.getString("JOB_TITLE"));
+            return g;
+        }else{
+            return null;
+        }
     }
 
     public OracleEmployeeDao(Connection connection) {

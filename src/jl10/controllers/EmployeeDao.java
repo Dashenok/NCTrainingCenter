@@ -8,18 +8,20 @@ import java.util.List;
 
 public interface EmployeeDao {
 
-    Employee create();
+    boolean add(Employee employee) throws SQLException;
 
     /** ���������� ������ ��������������� ������ � ��������� ������ key ��� null */
     Employee read(int key) throws SQLException;
 
     /** ��������� ��������� ������� group � ���� ������ */
-    void update(Employee group);
+    void update(Employee employee)throws SQLException ;
 
     /** ������� ������ �� ������� �� ���� ������ */
-    void delete(Employee group);
+    boolean delete(Employee employee) throws SQLException ;
 
     /** ���������� ������ �������� ��������������� ���� ������� � ���� ������ */
     public List<Employee> getAll() throws SQLException;
+
+    Employee readByArrtibute(String attribute, String attributeName) throws SQLException;
 
 }

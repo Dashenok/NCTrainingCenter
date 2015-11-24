@@ -9,6 +9,7 @@ public class Employee {
     private String department;
     private String lastName;
     private String job;
+    private String email;
 
     public int getId() {
         return id;
@@ -40,5 +41,13 @@ public class Employee {
 
     public void setJob(String job) {
         this.job = job;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

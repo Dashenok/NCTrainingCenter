@@ -3,24 +3,30 @@ package jl10;
 import jl10.controllers.DaoFactory;
 import jl10.controllers.EmployeeDao;
 import jl10.controllers.OracleDaoFactory;
-import jl10.models.Employee;
+import jl10.view.ConsoleView;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) throws SQLException {
         DaoFactory daoFactory = new OracleDaoFactory();
-        List<Employee> list;
-        Employee emp;
-
         Connection con = daoFactory.getConnection();
+        EmployeeDao employeeDao = daoFactory.getEmployeeDao(con);
 
-        Scanner sc = new Scanner(System.in);
-        int id;
+        ConsoleView consoleView = new ConsoleView(con, employeeDao);
+        while (true) {
+            ConsoleView.showMenu();
+            String readCommand = consoleView.readCommand();
+            if (consoleView.executeCommand(readCommand)==-1){
+                break;
+            }
+        }
+        con.commit();
+        con.close();
+        /*Scanner sc = new Scanner(System.in);
+
         while (true) {
             System.out.println("Введите id работника");
 
@@ -47,7 +53,9 @@ public class Main {
                 System.out.println("Вы ввели не целое число");
                 return;
             }
-        }
+        }*/
 
 }
+
+
 }
