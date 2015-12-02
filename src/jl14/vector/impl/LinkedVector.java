@@ -1,9 +1,9 @@
-package jl8.vector.impl;
+package jl14.vector.impl;
 
-import jl8.vector.Vector;
-import jl8.vector.Vectors;
-import jl8.vector.exceptions.IncompatibleVectorSizesException;
-import jl8.vector.exceptions.VectorIndexOutOfBoundsException;
+import jl14.vector.Vector;
+import jl14.vector.Vectors;
+import jl14.vector.exceptions.IncompatibleVectorSizesException;
+import jl14.vector.exceptions.VectorIndexOutOfBoundsException;
 
 import java.io.Serializable;
 
@@ -172,27 +172,25 @@ public class LinkedVector implements Vector, Cloneable, Serializable{
         return stringBuffer.toString().trim();
     }
 
-    public boolean equals(Object obj) {
-
-        if (!(obj instanceof Vector)) {
-            return false;
-        }
-        if (((Vector) obj).getSize() != size) {
-            return false;
-        }
-        Nod currentElement = head;
-        Nod currentObjectElement = ((LinkedVector) obj).head;
-
-        for (int i = 0; i < size; i++) {
-
-            if (currentElement.element != currentObjectElement.element) {
+    public boolean equals(Object obj){
+        if (obj instanceof Vector){
+            if (((Vector) obj).getSize() != size){
                 return false;
             }
-            currentElement = currentObjectElement.next;
-            currentObjectElement = currentObjectElement.next;
+            Nod currentElement = head;
+            Nod currentObjectElement = ((LinkedVector) obj).head;
+            for (int i = 0; i < size; i++) {
+
+                if (currentElement.element != currentObjectElement.element){
+                    return false;
+                }
+                currentElement = currentObjectElement.next;
+                currentObjectElement = currentObjectElement.next;
+                return true;
+            }
         }
-        return true;
-    }
+        return  false;}
+
     public Object clone() throws CloneNotSupportedException{
         Object newVector = super.clone();
         ((LinkedVector) newVector).fillFromVector(this);

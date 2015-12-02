@@ -1,12 +1,15 @@
 package jl5;
 
-import jl5.vector.*;
-import jl5.vector.impl.*;
+import jl5.vector.Vector;
+import jl5.vector.Vectors;
+import jl5.vector.impl.ArrayVector;
+import jl5.vector.impl.LinkedVector;
 
 import java.io.*;
 
 public class Main{
     public static void main(String[] args)  throws IOException{
+
         double[] mass = {1.0, 0.9, -6.4, 8, -0.4};
         ArrayVector arrayVectorInstance = new ArrayVector(5);
         LinkedVector linkedVectorInstance = new LinkedVector();

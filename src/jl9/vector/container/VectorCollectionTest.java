@@ -4,7 +4,7 @@ import jl9.vector.impl.ArrayVector;
 import junit.framework.TestCase;
 
 
-public class VectorCollectionTest extends TestCase{
+public class VectorCollectionTest extends TestCase {
 
     private double[] mass = {1.0, 0.9, -6.4, 8, -0.4};
     private double[] mass2 = {-6.4, 8, -0.4};
@@ -13,7 +13,7 @@ public class VectorCollectionTest extends TestCase{
     private ArrayVector vector2 = new ArrayVector(3);
     private ArrayVector vector3 = new ArrayVector(3);
 
-    private void fillArrays(){
+    private void fillArrays() {
         vector1.fillFromMass(mass);
         vector2.fillFromMass(mass2);
         vector3.fillFromMass(mass3);
@@ -47,9 +47,6 @@ public class VectorCollectionTest extends TestCase{
         assertFalse(vectorCollection.contains(vector3));
     }
 
-    public void testIterator() throws Exception {
-//        fillArrays();
-    }
 
     public void testToArray() throws Exception {
         fillArrays();
@@ -57,14 +54,21 @@ public class VectorCollectionTest extends TestCase{
         VectorCollection vectorCollection = new VectorCollection(testVectorArray);
         Object[] arrayFromCollection = vectorCollection.toArray();
         assertEquals(testVectorArray.length, arrayFromCollection.length);
-        for (int i = 0; i < arrayFromCollection.length; i++){
+        for (int i = 0; i < arrayFromCollection.length; i++) {
             assertEquals(testVectorArray[i], arrayFromCollection[i]);
         }
 
     }
 
     public void testToArrayWithObject() throws Exception {
-
+        fillArrays();
+        ArrayVector[] inputVectorArray = {vector3};
+        ArrayVector[] testVectorArray = {vector1, vector2};
+        VectorCollection testVectorCollection = new VectorCollection(testVectorArray);
+        Object[] resultVector = testVectorCollection.toArray(inputVectorArray);
+        for (int i = 0; i < resultVector.length; i++) {
+            assertEquals(testVectorArray[i], resultVector[i]);
+        }
     }
 
     public void testAdd() throws Exception {
@@ -73,19 +77,7 @@ public class VectorCollectionTest extends TestCase{
         VectorCollection vectorCollection = new VectorCollection(testVectorArray);
         vectorCollection.add(vector3);
         Object[] arrayFromCollection = vectorCollection.toArray();
-        assertEquals(vector3, arrayFromCollection[arrayFromCollection.length-1]);
-    }
-
-    public void testAddWithException() {
-        fillArrays();
-        ArrayVector[] testVectorArray = {vector1, vector2};
-        VectorCollection vectorCollection = new VectorCollection(testVectorArray);
-        /*int fakeVector = {10};
-        try {
-            vectorCollection.add(fakeVector);
-        } catch (ClassCastException e){
-            e.printStackTrace();
-        }*/
+        assertEquals(vector3, arrayFromCollection[arrayFromCollection.length - 1]);
     }
 
     public void testRemove() throws Exception {
@@ -106,7 +98,7 @@ public class VectorCollectionTest extends TestCase{
         int fakeVector = 10;
         try {
             vectorCollection.remove(fakeVector);
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             e.printStackTrace();
         }
     }
@@ -127,7 +119,7 @@ public class VectorCollectionTest extends TestCase{
 
         ArrayVector[] testVectorArray = {vector1};
         VectorCollection testVectorCollection = new VectorCollection(testVectorArray);
-        assertFalse(testVectorCollection.addAll(emptyVectorCollection));
+        assertTrue(testVectorCollection.addAll(emptyVectorCollection));
     }
 
     public void testClear() throws Exception {
@@ -191,32 +183,5 @@ public class VectorCollectionTest extends TestCase{
         int testCollectionLength = testVectorCollection.size();
         assertFalse(testVectorCollection.removeAll(inputVectorCollection));
         assertEquals(testCollectionLength, testVectorCollection.size());
-    }
-
-    public void testContainsAll() throws Exception {
-        fillArrays();
-        ArrayVector[] inputVectorArray = {vector1, vector2};
-        ArrayVector[] testVectorArray = {vector1, vector2, vector3};
-        VectorCollection inputVectorCollection = new VectorCollection(inputVectorArray);
-        VectorCollection testVectorCollection = new VectorCollection(testVectorArray);
-        assertTrue(testVectorCollection.containsAll(inputVectorCollection));
-    }
-
-    public void testNotContainsAll() throws Exception {
-        fillArrays();
-        ArrayVector[] inputVectorArray = {vector1, vector3};
-        ArrayVector[] testVectorArray = {vector1, vector2};
-        VectorCollection inputVectorCollection = new VectorCollection(inputVectorArray);
-        VectorCollection testVectorCollection = new VectorCollection(testVectorArray);
-        assertFalse(testVectorCollection.containsAll(inputVectorCollection));
-    }
-
-    public void testContainsAllEmpty() throws Exception {
-        fillArrays();
-        ArrayVector[] inputVectorArray = new ArrayVector[0];
-        ArrayVector[] testVectorArray = {vector1, vector2, vector3};
-        VectorCollection inputVectorCollection = new VectorCollection(inputVectorArray);
-        VectorCollection testVectorCollection = new VectorCollection(testVectorArray);
-        assertTrue(testVectorCollection.containsAll(inputVectorCollection));
     }
 }

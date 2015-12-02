@@ -1,9 +1,9 @@
-package jl8.vector.impl;
+package jl14.vector.impl;
 
-import jl8.vector.Vector;
-import jl8.vector.Vectors;
-import jl8.vector.exceptions.IncompatibleVectorSizesException;
-import jl8.vector.exceptions.VectorIndexOutOfBoundsException;
+import jl14.vector.Vector;
+import jl14.vector.Vectors;
+import jl14.vector.exceptions.IncompatibleVectorSizesException;
+import jl14.vector.exceptions.VectorIndexOutOfBoundsException;
 
 import java.io.Serializable;
 
@@ -170,22 +170,15 @@ public class ArrayVector implements Vector, Cloneable, Serializable {
     }
 
     public boolean equals(Object obj){
-        if (!(obj instanceof Vector)){
-            return false;
-        }
-        if (((Vector) obj).getSize() != size){
-            return false;
-        }
-        //todo зачем тут цикл ?
-        // каждый элемент массива сравнивается по очереди
-        //todo тут логика странная , не совсем понятно, что должно получится , надо переделать
-        for (int i = 0; i < size; i++) {
-            if (!(((Vector) obj).getElement(i) == getElement(i))) {
+        if (obj instanceof Vector){
+            if (((Vector) obj).getSize() != size){
                 return false;
             }
+            for (int i = 0; i < size; i++) {
+                return ((Vector) obj).getElement(i) == getElement(i);
+            }
         }
-        return true;
-
+        return  false;
     }
 
     public Object clone() throws CloneNotSupportedException{
