@@ -5,7 +5,9 @@ import jl5.vector.Vectors;
 import jl5.vector.impl.ArrayVector;
 import jl5.vector.impl.LinkedVector;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args)  throws IOException{
@@ -44,8 +46,8 @@ public class Main {
         Vectors.writeVector(arrayVectorInstance1, outText);
         Vectors.writeVector(arrayVectorInstance1, outText);
         outText.close();
-
-        Client.startClient("out.txt", "vectorSum");
+        //Server.runServer();
+        Client.startClient("out.txt", "vectorSum.txt");
        /* Vector vectorText = Vectors.readVector(inText);
 		System.out.println(vectorText);
         Vector vectorText1 = Vectors.readVector(inText);

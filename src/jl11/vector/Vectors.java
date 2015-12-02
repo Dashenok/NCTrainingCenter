@@ -1,14 +1,13 @@
 package jl11.vector;
 
 
-import jl9.vector.Vector;
-import jl9.vector.impl.ArrayVector;
+import jl11.vector.impl.ArrayVector;
 
 import java.io.*;
 
 public class Vectors {
 
-    public static void sort(jl11.vector.Vector arrayVector, boolean incr){
+    public static void sort(Vector arrayVector, boolean incr){
         int size = arrayVector.getSize()-1;
         int startIndex = 0;
         double temp;
@@ -33,7 +32,7 @@ public class Vectors {
         }
     }
 
-    public static void outputVector(jl11.vector.Vector v, OutputStream out) throws IOException{
+    public static void outputVector(Vector v, OutputStream out) throws IOException{
             int l = v.getSize();
             DataOutputStream dataOutputStream = new DataOutputStream(out);
             dataOutputStream.writeInt(l);
@@ -42,17 +41,17 @@ public class Vectors {
             }
 
     }
-    public static jl11.vector.Vector inputVector(InputStream in) throws IOException{
+    public static Vector inputVector(InputStream in) throws IOException{
         DataInputStream dataInputStream = new DataInputStream(in);
         int l = dataInputStream.readInt();
-        jl11.vector.impl.ArrayVector arrayVector = new jl11.vector.impl.ArrayVector(l);
+        ArrayVector arrayVector = new ArrayVector(l);
         for (int i = 0; i < l; i++) {
             arrayVector.setElement(i, dataInputStream.readDouble());
         }
         return arrayVector;
 
     }
-    public static void writeVector(jl11.vector.Vector v, Writer out){
+    public static void writeVector(Vector v, Writer out){
 
         int l = v.getSize();
         PrintWriter printWriter = new PrintWriter(out);
@@ -63,11 +62,11 @@ public class Vectors {
         printWriter.println();
 
     }
-    public static jl11.vector.Vector readVector(Reader in) throws IOException{
+    public static Vector readVector(Reader in) throws IOException{
             StreamTokenizer st = new StreamTokenizer(in);
             st.nextToken();
             int size = (int) st.nval;
-            jl11.vector.Vector v = new jl11.vector.impl.ArrayVector(size);
+            Vector v = new ArrayVector(size);
             for (int i = 0; i < size; i++) {
                 st.nextToken();
                 v.setElement(i, st.nval);
