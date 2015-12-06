@@ -1,7 +1,8 @@
-package jl14.vector.impl;
+package jl14.vector.patterns;
 
 import jl14.vector.Vector;
 import jl14.vector.VectorFactory;
+import jl14.vector.impl.LinkedVector;
 
 
 public class LinkedListFactory implements VectorFactory {

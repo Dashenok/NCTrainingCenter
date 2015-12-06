@@ -1,13 +1,15 @@
 package jl14.vector;
 
 
-import jl14.vector.impl.ArrayVectorCreator;
+import jl14.vector.patterns.ArrayVectorFactory;
+import jl14.vector.patterns.JVectorAdapter;
+import jl14.vector.patterns.ProtectedVector;
 
 import java.io.*;
 
 public class Vectors {
 
-    private static VectorFactory vectorFactory = new ArrayVectorCreator();
+    private static VectorFactory vectorFactory = new ArrayVectorFactory();
 
     public static void sort(Vector vector, boolean incr){
         int size = vector.getSize()-1;
@@ -89,4 +91,12 @@ public class Vectors {
         return vectorFactory.createVector();
     }
 
+
+    public static Vector getProtectedVector(Vector vector){
+        return new ProtectedVector(vector);
+    }
+
+    public static Vector getVectorAdapter(java.util.Vector jVector){
+        return new JVectorAdapter(jVector);
+    }
 }
