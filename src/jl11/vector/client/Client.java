@@ -24,11 +24,12 @@ public class Client {
             OutputStream sout = socket.getOutputStream();
 
 
-            BufferedReader inText = new BufferedReader(new FileReader(fileWithVectors));
+            BufferedReader inTextClient = new BufferedReader(new FileReader(fileWithVectors));
+            BufferedWriter outTextClient = new BufferedWriter(new FileWriter(outputFile));
             while (true) {
                try {
-                    Vector vectorText1 = Vectors.readVector(inText);
-                    Vector vectorText2 = Vectors.readVector(inText);
+                    Vector vectorText1 = Vectors.readVector(inTextClient);
+                    Vector vectorText2 = Vectors.readVector(inTextClient);
                    if ((vectorText1.toString().equals("")) || (vectorText2.toString().equals(""))) {
                        break;
                    }
@@ -36,14 +37,16 @@ public class Client {
                     Vectors.outputVector(vectorText2, sout);
 
                     Vector summedVector = Vectors.inputVector(sin);
-                    BufferedWriter outText = new BufferedWriter(new FileWriter(outputFile));
-                    Vectors.writeVector(summedVector, outText);
+
+                    Vectors.writeVector(summedVector, outTextClient);
 
                     //outText.close();
                 } catch (Exception e){
+
                     sout.flush();
                     break;
                 }
+
 
           }
 
@@ -51,6 +54,7 @@ public class Client {
         //} catch (Exception x) {
           //  x.printStackTrace();
         //}
+        outTextClient.close();
     }
     public static void main(String[] args) throws IOException{
 
