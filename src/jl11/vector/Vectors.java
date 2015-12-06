@@ -43,12 +43,21 @@ public class Vectors {
     }
     public static Vector inputVector(InputStream in) throws IOException{
         DataInputStream dataInputStream = new DataInputStream(in);
-        int l = dataInputStream.readInt();
-        ArrayVector arrayVector = new ArrayVector(l);
-        for (int i = 0; i < l; i++) {
-            arrayVector.setElement(i, dataInputStream.readDouble());
+        try {
+            int l = dataInputStream.readInt();
+            ArrayVector arrayVector = new ArrayVector(l);
+            for (int i = 0; i < l; i++) {
+                arrayVector.setElement(i, dataInputStream.readDouble());
+            }
+            return arrayVector;
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return arrayVector;
+//        ArrayVector arrayVector = new ArrayVector(l);
+//        for (int i = 0; i < l; i++) {
+//            arrayVector.setElement(i, dataInputStream.readDouble());
+//        }
+        return null;
 
     }
     public static void writeVector(Vector v, Writer out){
