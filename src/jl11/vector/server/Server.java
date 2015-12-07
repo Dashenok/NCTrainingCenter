@@ -27,11 +27,11 @@ public class Server {
             InputStream sin = socket.getInputStream();
             OutputStream sout = socket.getOutputStream();
             while (true) {
-                System.out.println("000");
+
                 Vector vector1 = Vectors.inputVector(sin);
-                System.out.println("111");
+
                 Vector vector2 = Vectors.inputVector(sin);
-                System.out.println("222");
+
                 vector1.sum(vector2);
                 Vectors.outputVector(vector1, sout);
             }
